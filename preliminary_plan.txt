@@ -1,0 +1,127 @@
+Agree on the topic - what project you will make
+    - API integration. Flight search site based on Skyscanner API
+
+Agree on the subject of the project of your choice
+    - Flight search. Search for flights and subscribe to price alerts for flights under specified price.
+
+Come up with the possible name
+    - FlightSearch
+
+Create a GitHub repository, set up a contributor, clone the project locally
+    - https://github.com/erkiraak/SDA_final_project-Flight_search
+
+Design models
+    - User
+        - user id
+        - username
+        - name
+        - email
+        - phone number
+        - home airport
+        - subscriptions
+        *- search history
+
+    - Search
+        - search id
+        - type of search (fixed dates, flexible dates, etc)
+        - origin(s)
+        - destination(s)
+        - earliest departure date (if flexible)
+        - latest return date (if flexible)
+        - duration (if flexible)
+        - maximum number of stops
+        - maximum travel time
+        - number of passengers
+        - travel class
+        - number of results
+
+    - Flight (from search result)
+        - flight id
+        - flight number
+        - airline
+        - departure airport
+        - arrival airport
+        - departure date
+        - arrival date
+        - departure time
+        - arrival time
+        - duration
+        - travel class
+        - price per person
+
+    - Subscription
+        - subscription id
+        - search id
+        - maximum price
+        - price history
+        - subscription end date
+
+    - City
+        -   city id
+        -   city name
+        -   IATA code
+        -   country name
+
+Pages
+    - Home page
+        - Search for flights
+        - Login/logout
+        - Account
+        - Subscriptions
+        *- Search history
+        *- Recent searches from home city
+
+    - Search results page
+        - Search results
+        *- Edit search
+        - Subscribe to price alerts (specify maximum price, subscribe until end date)
+
+    - Subscriptions
+        - Subscriptions as a table
+        - Delete subscription
+
+    - Edit subscription
+        - Edit subscription
+        - Save subscription
+        - Delete subscription
+
+    *- Search history
+        - Search history as a table
+        - Delete search history
+
+    - Login page (email, (google, facebook))
+        - Login
+        - Register
+
+    - Register page
+        - Register (email, *google, *facebook)
+
+    - Account page
+        - Edit profile
+        - Subscriptions
+        *- Search history
+        - Delete account
+        - Logout
+
+
+Agree on the functionality
+    - User can search for flights and subscribe to price alerts for flights under specified price.
+    - User can view his/her subscriptions.
+    - User can edit his/her subscriptions.
+    - User can unsubscribe from a subscription.
+    *- User can view his/her search history.
+    *- User can delete his/her search history.
+    - User can delete his/her account.
+    - User can view his/her profile.
+    - User can update his/her profile.
+    - Searching is done using Skyscanner API.
+    - User can subscribe to a search from result page by specifying maximum price.
+    - Subscribed searches are repeated every day. If price is below the maximum price, an email (or text) is sent to the user.
+
+
+Agree on the technical part (framework, DB type, possible libraries)
+    - Framework: Django
+    - Database: MySQL
+    - Libraries: Bootstrap,
+
+Make a graph representing the architecture of the project
