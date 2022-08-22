@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Login page</title>
+</head>
+<body>
+<h1>FlightSearch login page</h1>
+    {% if user.is_authenticated %}
+        <p>Welcome, {{ user.username }} !</p>
+        <a href='/accounts/logout'>Logout</a>
+    {% else %}
+        <p>Welcome friend, please log in!</p>
+        <a href='/accounts/login'>Login</a>
+    {% endif %}
+
+</body>
+</html>

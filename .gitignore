@@ -102,11 +102,11 @@ celerybeat.pid
 *.sage.py
 
 # Environments
-.env
+flightsearch/.env
 .venv
-env/
+flightsearch/.env/
 venv/
-ENV/
+flightsearch/.env/
 env.bak/
 venv.bak/
 
