@@ -45,8 +45,10 @@ class Flight(models.Model):
 
 class Search(models.Model):
     user = models.ForeignKey(Profile, on_delete=models.CASCADE)
-    fly_from = models.ManyToManyField(Airport, related_name='flight_origin')
-    fly_to = models.ManyToManyField(Airport, related_name='flight_destination')
+    flight_type = models.CharField(max_length=10, default="round")
+    search_type = models.CharField(max_length=10, default="strict")
+    fly_from = models.CharField(max_length=3)
+    fly_to = models.CharField(max_length=3)
     date_from = models.DateField()
     date_to = models.DateField()
     return_from = models.DateField(blank=True, null=True)
@@ -54,7 +56,6 @@ class Search(models.Model):
     nights_in_dst_from = models.IntegerField(blank=True, null=True)
     nights_in_dst_to = models.IntegerField(blank=True, null=True)
     max_fly_duration = models.IntegerField(blank=True, null=True)
-    flight_type = models.CharField(max_length=10, default="round")
     adults = models.IntegerField(blank=True, null=True, default=1)
     children = models.IntegerField(blank=True, default=0)
     infants = models.IntegerField(blank=True, default=0)
@@ -64,7 +65,7 @@ class Search(models.Model):
     price_from = models.IntegerField(blank=True, null=True)
     price_to = models.IntegerField(blank=True, null=True)
     max_stopovers = models.IntegerField(blank=True, null=True)
-    limit = models.IntegerField(default=100)
+    limit = models.IntegerField(default=5)
 
 
 class Result(models.Model):
@@ -83,4 +84,10 @@ class Result(models.Model):
     price = models.IntegerField()
     bags_price = models.CharField(max_length=100)
     availability = models.IntegerField()
+    flights = models.ManyToManyField(Flight)
     deep_link = models.CharField(max_length=500)
+
+
+class Subscription(models.Model):
+    search = models.ForeignKey(Search, on_delete=models.CASCADE)
+
