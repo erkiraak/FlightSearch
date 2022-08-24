@@ -106,7 +106,7 @@ flightsearch/.env
 .venv
 flightsearch/.env/
 venv/
-flightsearch/.env/
+.env
 env.bak/
 venv.bak/
 
