@@ -105,8 +105,8 @@ celerybeat.pid
 flightsearch/.env
 .venv
 flightsearch/.env/
-venv/
 .env
+venv/
 env.bak/
 venv.bak/
 
