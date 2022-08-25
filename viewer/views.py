@@ -1,6 +1,15 @@
 from django.shortcuts import render
+from django.urls import reverse_lazy
+from django.views.generic import FormView
+
+from .forms import SearchForm
 from .models import Profile
 
+
+class SearchView(FormView):
+    template_name = 'index.html'
+    form_class = SearchForm
+    success_url = reverse_lazy('search')
 
 def create_profile(request):
     """
