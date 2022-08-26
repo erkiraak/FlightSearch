@@ -41,11 +41,12 @@
 
 
         </div>
-        <ul class="nav navbar-nav navbar-right">
+        <ul class="nav navbar-nav navbar-right navbar-dark">
                 {% if user.is_authenticated %}
-                <li><a href="{% url 'account_logout' %}?next={{ request.path }}">Logout</a></li>
+                    <li>Welcome {{ user.first_name }}!</li>
+                    <li><a href="{% url 'account_logout' %}?next={{ request.path }}">Logout</a></li>
                 {% else %}
-                <li><a href="{% url 'account_login' %}">Login</a></li>
+                    <li><a href="{% url 'account_login' %}">Login</a></li>
                 {% endif %}
             </ul>
     </div>
