@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+
+
+{% block content %}
+
+<ul>
+  {% for i in itineraries %}
+    <li> From: {{i.fly_from.city.name}}</li>
+    <li> To: {{i.fly_to}}</li>
+    <li> Price: {{i.price}}</li>
+    <li></li>
+  {% endfor %}
+</ul>
+
+<br>
+
+
+{% endblock %}

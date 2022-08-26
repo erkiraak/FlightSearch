@@ -1,15 +1,12 @@
-import json
-
 import requests
 import environ
 
-from django.db import IntegrityError
 from django.http import HttpResponse
 from django.shortcuts import render
 
 from datetime import datetime, timedelta
 
-from .models import Country, City, Airport, Airline, Flight, Search
+from .models import Country, City, Airport, Airline, Flight, Search, Result
 from viewer.models import Profile
 
 env = environ.Env(
@@ -50,44 +47,6 @@ def get_airport_data_from_easypnr_api():
         return HttpResponse('Airport data already exists')
 
 
-def create_search_object(request) -> Search:
-    '''
-    Creates a search object from request.GET
-    :param request:
-    :return: Search object
-    '''
-
-    parameters = request.GET
-    print(parameters)
-
-    if request.user.is_authenticated:
-        user = Profile.objects.get(user=request.user)
-    else:
-        user = None
-
-    search = Search(
-        user=user,
-        flight_type=parameters.get('flight_type'),
-        search_type=parameters.get('search_type'),
-        fly_from=parameters.get('fly_from'),
-        fly_to=parameters.get('fly_to'),
-        departure_date=parameters.get('departure_date'),
-        return_date=parameters.get('return_date'),
-        nights_in_dst_from=parameters.get('nights_in_dst_from'),
-        nights_in_dst_to=parameters.get('nights_in_dst_to'),
-        max_fly_duration=parameters.get('max_fly_duration'),
-        max_stopovers=parameters.get('max_stopovers'),
-        adults=parameters.get('adults'),
-        children=parameters.get('children'),
-        infants=parameters.get('infants'),
-        selected_cabins=parameters.get('selected_cabins'),
-        curr=parameters.get('curr'),
-        price_to=parameters.get('price_to'),
-        locale=request.LANGUAGE_CODE,
-    )
-    return search
-
-
 def create_query_for_kiwi_api(search) -> dict:
     '''
     Generate search query for KIWI api from a Search object
@@ -96,35 +55,38 @@ def create_query_for_kiwi_api(search) -> dict:
     '''
 
     query = {
-        'fly_from': search.fly_from,  #
-        'fly_to': search.fly_to,  #
-        'date_from': (datetime.now().date() - timedelta(days=5)).strftime("%d/%m/%Y"),
-        'date_to': (datetime.now().date() + timedelta(days=10)).strftime("%d/%m/%Y"),
+        'fly_from': search.fly_from,  # TODO create proper IATA search
+        'fly_to': search.fly_to,  # TODO create proper IATA search
+        'date_from': (datetime.strptime(search.departure_date, '%Y-%m-%d') -
+                      timedelta(days=search.flexible)).strftime("%d/%m/%Y"),
+        'date_to': (datetime.strptime(search.departure_date, '%Y-%m-%d') +
+                    timedelta(days=search.flexible)).strftime("%d/%m/%Y"),
         'flight_type': search.flight_type,
         'adults': search.adults,
         'children': search.children,
         'infants': search.infants,
-        'selected_cabins': search.selected_cabins,
+        'selected_cabins': search.selected_cabins,  # TODO add mixed cabin option
         'curr': search.curr,
         'locale': search.locale,
         'limit': search.limit
     }
-    #
+
     if search.search_type == "duration":
         query['nights_in_dst_from'] = search.nights_in_dst_from
         query['nights_in_dst_to'] = search.nights_in_dst_to
 
     if search.flight_type == "round":
-        query['return_from'] = (datetime.now().date() - timedelta(days=search.flexible)).strftime("%d/%m/%Y")
-        query['return_to'] = (datetime.now().date() + timedelta(days=100)).strftime("%d/%m/%Y")
+        query['return_from'] = (datetime.strptime(search.return_date, '%Y-%m-%d') -
+                                timedelta(days=search.flexible)).strftime("%d/%m/%Y")
+        query['return_to'] = (datetime.strptime(search.return_date, '%Y-%m-%d') +
+                              timedelta(days=search.flexible)).strftime("%d/%m/%Y")
 
-    print(f"duration '{search.max_fly_duration}'")
-    if not search.max_fly_duration != 0:
+    if not search.max_fly_duration != '':
         query['max_fly_duration'] = search.max_fly_duration
 
     if search.max_stopovers != '':
         query['max_stopovers'] = search.max_stopovers
-    print(query)
+
     return query
 
 
@@ -133,7 +95,7 @@ def search_from_kiwi_api(search):
     Search for flights using KIWI api.
     KIWI search query is generated using the passed Search object.
     :param search: Search object
-    :return: API response
+    :return: API api_response
     '''
 
     endpoint_search = "https://tequila-api.kiwi.com/v2/search"
@@ -146,10 +108,16 @@ def search_from_kiwi_api(search):
 
     query = create_query_for_kiwi_api(search)
 
-    response = requests.get(url=endpoint_search, headers=headers, params=query)
+    try:
+        api_response = requests.get(url=endpoint_search, headers=headers, params=query)
+        api_response.raise_for_status()
+    except Exception as ex:
+        print(ex)
+        return ex
 
-    response.raise_for_status()
-    return response.json()
+    # TODO implement api response check and error reporting
+
+    return api_response.json()
 
 
 def flight_search(request) -> HttpResponse:
@@ -162,10 +130,14 @@ def flight_search(request) -> HttpResponse:
     :param request:
     :return: HTTPResponse
     '''
-    search = create_search_object(request=request)
+    search = Search.create_search_object_from_request(request=request)
 
-    response = search_from_kiwi_api(search)
+    api_response = search_from_kiwi_api(search)
 
-    print(response)
+    results = [Result.create_result_object_from_kiwi_response(result) for result in api_response['data']]
 
-    return HttpResponse(search)
+    context = {
+        'itineraries': results
+    }
+
+    return render(request, template_name='search/results.html', context=context)
