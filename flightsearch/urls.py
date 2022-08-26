@@ -17,11 +17,16 @@ from django.contrib import admin
 from django.urls import path, include
 from django.views.generic import TemplateView
 
+from search.views import flight_search
+from viewer.views import SearchView, login_view, logged_in_view
+
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('accounts/', include('allauth.urls')),
-    path('logged_in/', TemplateView.as_view(template_name="viewer/logged_in"
-                                                          ".html")),
-    path('', TemplateView.as_view(template_name="viewer/user.html")),
+    path('logged_in/', logged_in_view),
+    # path('logged_in/', TemplateView.as_view(template_name="viewer/logged_in"
+    #                                                       ".html")),
+    path('', SearchView.as_view(template_name="viewer/index.html"), name='index_search'),
+    path('search/', flight_search),
 
 ]
