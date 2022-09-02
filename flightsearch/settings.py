@@ -49,7 +49,6 @@ INSTALLED_APPS = [
     'viewer',
     'search',
     'django.contrib.sites',
-    # Add the following django-allauth apps
     'allauth',
     'allauth.account',
     'allauth.socialaccount',
@@ -146,7 +145,7 @@ AUTHENTICATION_BACKENDS = [
     'allauth.account.auth_backends.AuthenticationBackend'
 ]
 
-SITE_ID = 3
+SITE_ID = 5
 LOGIN_REDIRECT_URL = '/'
 
 # Additional configuration settings
