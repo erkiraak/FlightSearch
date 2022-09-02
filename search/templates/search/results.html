@@ -5,7 +5,7 @@
 
 <ul>
   {% for i in itineraries %}
-    <li> From: {{i.fly_from.city.name}}</li>
+    <li> From: {{i.fly_from.city}}</li>
     <li> To: {{i.fly_to}}</li>
     <li> Price: {{i.price}}</li>
     <li></li>
@@ -13,6 +13,8 @@
 </ul>
 
 <br>
+
+    <input type="submit" name="submit" value="Subscribe to this search">
 
 
 {% endblock %}
