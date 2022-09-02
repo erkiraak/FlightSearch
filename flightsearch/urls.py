@@ -18,10 +18,21 @@ from django.urls import path, include
 
 from search.views import search_view
 from viewer.views import login_view, logged_in_view
+from subscription.views import (CreateSubscription,
+                                ViewSubscription,
+                                ListSubscription,
+                                UpdateSubscription,
+                                DeleteSubscription
+                                )
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('accounts/', include('allauth.urls')),
     path('logged_in/', logged_in_view),
-    path('', search_view, name='index_search'),
+    path('', search_view, name='index'),
+    path('search/<int:pk>', CreateSubscription.as_view(), name='search'),
+    path('subscription/<int:pk>', ViewSubscription.as_view(), name='view_subscription'),
+    path('subscription/<int:pk>/edit', UpdateSubscription.as_view(), name='update_subscription'),
+    path('subscription/<int:pk>/delete', DeleteSubscription.as_view(), name='delete_subscription'),
+    path('subscriptions', ListSubscription.as_view(), name='list_subscription'),
 ]

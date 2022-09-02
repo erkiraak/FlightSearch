@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+
+
+{% block content %}
+<h3>Your subscriptions:</h3>
+<ul>
+  {% for s in subscription %}
+    <li> <a href="{% url 'view_subscription' s.pk %}">{{s.search.fly_from}} - {{s.search.fly_to}}</a></li>
+  {% endfor %}
+</ul>
+
+<br>
+
+{% endblock %}

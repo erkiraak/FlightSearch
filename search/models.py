@@ -86,6 +86,8 @@ class Search(models.Model):
         :return: Search object
         '''
 
+        if not user.is_authenticated:
+            user = None
 
         search = cls(
             user=user,
@@ -172,7 +174,3 @@ class Result(models.Model):
         #     result.airlines.set(Airline.get_airline(airline))
         result.save()
         return result
-
-
-class Subscription(models.Model):
-    search = models.ForeignKey(Search, on_delete=models.CASCADE)
