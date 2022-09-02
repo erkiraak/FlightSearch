@@ -47,8 +47,6 @@ class SearchForm(forms.ModelForm):
     def clean_return_date(self):
         departure_date = self.cleaned_data['departure_date']
         return_date = self.cleaned_data['return_date']
-        print(departure_date)
-        print(return_date)
         if departure_date > return_date:
             raise ValidationError("Return date cannot be before departure date")
 

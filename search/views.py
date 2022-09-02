@@ -22,6 +22,8 @@ def search_view(request):
         form = SearchForm(request.POST)
         if form.is_valid():
 
+
+
             search = Search.create_search_object_from_request(form.cleaned_data, request.user)
 
             api_response = search_from_kiwi_api(search)
@@ -34,7 +36,8 @@ def search_view(request):
             results = [Result.create_result_object_from_kiwi_response(result, search.id) for result in
                        api_response['data']]
 
-            return render(request, template_name='search/results.html', context={'itineraries': results})
+            return render(request, template_name='search/results.html', context={'itineraries': results,
+                                                                                 'search': search})
 
         else:
             return render(request, 'search/index.html', {'form': form})
