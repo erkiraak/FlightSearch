@@ -2,14 +2,19 @@
 
 
 {% block content %}
-<h3>Your subscriptions:</h3>
+
+Are you sure you want to delete the subscriptions:
+
 <ul>
   {% for s in subscription %}
     <li> <a href="{% url 'view_subscription' s.pk %}">{{s.search.fly_from}} - {{s.search.fly_to}}</a></li>
   {% endfor %}
 </ul>
 
-<br>
-<a href="{% url 'delete_all_subscription' %}">Delete all subscriptions</a>
+<form method="post">
+    {% csrf_token %}
+    <input type="submit", value="Delete All Subscriptions">
+</form>
+
 
 {% endblock %}

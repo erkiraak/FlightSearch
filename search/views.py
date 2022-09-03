@@ -7,6 +7,7 @@ from django.shortcuts import render
 from .forms import SearchForm
 from .models import Search, Result
 
+
 # env = environ.Env(
 #     # set casting, default value
 #     DEBUG=(bool, False)
@@ -22,16 +23,17 @@ def search_view(request):
         form = SearchForm(request.POST)
         if form.is_valid():
 
-
-
             search = Search.create_search_object_from_request(form.cleaned_data, request.user)
 
             api_response = search_from_kiwi_api(search)
 
             if api_response is None:
-
                 return render(request, 'search/index.html', {'form': form,
-                                                             'error': 'No results found, please check info entered'})
+                                                             'error': 'No results found, invalid destinations'})
+
+            if len(api_response['data']) == 0:
+                return render(request, 'search/index.html', {'form': form,
+                                                             'error': 'No flights found, please check info entered'})
 
             results = [Result.create_result_object_from_kiwi_response(result, search.id) for result in
                        api_response['data']]

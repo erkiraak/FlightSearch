@@ -22,7 +22,8 @@ from subscription.views import (CreateSubscription,
                                 ViewSubscription,
                                 ListSubscription,
                                 UpdateSubscription,
-                                DeleteSubscription
+                                DeleteSubscription,
+                                DeleteAllSubscription
                                 )
 
 urlpatterns = [
@@ -34,5 +35,6 @@ urlpatterns = [
     path('subscription/<int:pk>', ViewSubscription.as_view(), name='view_subscription'),
     path('subscription/<int:pk>/edit', UpdateSubscription.as_view(), name='update_subscription'),
     path('subscription/<int:pk>/delete', DeleteSubscription.as_view(), name='delete_subscription'),
+    path('subscriptions/delete', DeleteAllSubscription.as_view(), name='delete_all_subscription'),
     path('subscriptions', ListSubscription.as_view(), name='list_subscription'),
 ]
