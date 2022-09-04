@@ -3,11 +3,11 @@
 {% block content %}
 
 
-<form action="/" enctype="multipart/form-data" method="post">
+<form class="form-wrapper" action="/" enctype="multipart/form-data" method="post">
     {% csrf_token %}
     {{error}}
     {{ form.as_p }}
-    <input type="submit" name="submit" value="Submit">
+    <input type="submit" name="submit" value="Submit" id="submit">
 </form>
 
 {% endblock %}
