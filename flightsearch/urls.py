@@ -32,7 +32,7 @@ urlpatterns = [
     path('accounts/', include('allauth.urls')),
     path('logged_in/', logged_in_view),
     path('', search_view, name='index'),
-    path('search/<int:pk>', CreateSubscription.as_view(), name='search'),
+    path('subscribe/<int:pk>', CreateSubscription.as_view(), name='create_subscription'),
     path('subscription/<int:pk>', ViewSubscription.as_view(), name='view_subscription'),
     path('subscription/<int:pk>/edit', UpdateSubscription.as_view(), name='update_subscription'),
     path('subscription/<int:pk>/delete', DeleteSubscription.as_view(), name='delete_subscription'),

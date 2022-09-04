@@ -1,48 +1,68 @@
-import environ
-
 from .api_search_easypnr import get_airport_data_from_easypnr_api
 from .api_search_kiwi import search_from_kiwi_api
-from django.http import HttpResponse
 from django.shortcuts import render
+from django.views.generic import DetailView
 from .forms import SearchForm
 from .models import Search, Result
 
 
-# env = environ.Env(
-#     # set casting, default value
-#     DEBUG=(bool, False)
-# )
-
 # TODO  delete search data after session
 
 def search_view(request):
-    # Check if airport data is in the database. If not, make api call and add to database
+    # Check if airport data is in the database.
+    # If not, make api call and add to database
     get_airport_data_from_easypnr_api()
 
     if request.method == 'POST':
         form = SearchForm(request.POST)
+
         if form.is_valid():
 
-            search = Search.create_search_object_from_request(form.cleaned_data, request.user)
+            search = Search.create_search_object_from_request(
+                cleaned_data=form.cleaned_data,
+                user=request.user
+            )
 
             api_response = search_from_kiwi_api(search)
 
+            # if API call returns an error
             if api_response is None:
-                return render(request, 'search/index.html', {'form': form,
-                                                             'error': 'No results found, invalid destinations'})
+                context = {
+                    'form': form,
+                    'error': 'No results found, invalid destinations'
+                }
+                template = 'search/index.html'
 
-            if len(api_response['data']) == 0:
-                return render(request, 'search/index.html', {'form': form,
-                                                             'error': 'No flights found, please check info entered'})
+            # if api call returns a response but no results
+            elif len(api_response['data']) == 0:
+                context = {
+                    'form': form,
+                    'error': 'No flights found, please check info entered'
+                }
+                template = 'search/index.html'
 
-            results = [Result.create_result_object_from_kiwi_response(result, search.id) for result in
-                       api_response['data']]
+            # if api call returns results
+            else:
+                results = [
+                    Result.create_result_object_from_kiwi_response(
+                        api_response=result,
+                        search_id=search.id
+                    )
+                    for result in api_response['data']
+                ]
 
-            return render(request, template_name='search/results.html', context={'itineraries': results,
-                                                                                 'search': search})
+                context = {
+                    'itineraries': results,
+                    'search': search
+                }
 
-        else:
-            return render(request, 'search/index.html', {'form': form})
+                template = 'search/list_results.html'
+
     else:
         form = SearchForm(None)
-        return render(request, 'search/index.html', {'form': form})
+        template = 'search/index.html'
+        context = {
+            'form': form,
+        }
+
+    return render(request=request, template_name=template, context=context)
