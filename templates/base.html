@@ -8,6 +8,7 @@
     <title>FlightSearch</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css"
           integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
+
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
             integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
             crossorigin="anonymous"></script>
@@ -17,6 +18,7 @@
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js"
             integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k"
             crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="../static/style.css">
 
 </head>
 
@@ -24,6 +26,7 @@
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
     <div class="container fixed">
         <a class="navbar-brand" href="/">FlightSearch</a>
+        <a class="navbar-brand" href="/profile">Profile</a>
         <button
                 class="navbar-toggler" type="button"
                 data-toggle="collapse" data-target="#navbarNavAltMarkup"
@@ -42,8 +45,11 @@
 
         </div>
         <ul class="nav navbar-nav navbar-right navbar-dark">
+             <a class="nav-item nav-link active" href="/">
+                    Welcome, {{user.first_name.title|default:'Guest'}}
+                </a>
                 {% if user.is_authenticated %}
-                    <li>Welcome {{ user.first_name }}!</li>
+
                     <li><a href="{% url 'account_logout' %}?next={{ request.path }}">Logout</a></li>
                 {% else %}
                     <li><a href="{% url 'account_login' %}">Login</a></li>

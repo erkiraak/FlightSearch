@@ -17,6 +17,7 @@ from django.contrib import admin
 from django.urls import path, include
 
 from search.views import search_view
+from users.views import profile
 from viewer.views import login_view, logged_in_view
 from subscription.views import (CreateSubscription,
                                 ViewSubscription,
@@ -37,4 +38,5 @@ urlpatterns = [
     path('subscription/<int:pk>/delete', DeleteSubscription.as_view(), name='delete_subscription'),
     path('subscriptions/delete', DeleteAllSubscription.as_view(), name='delete_all_subscription'),
     path('subscriptions', ListSubscription.as_view(), name='list_subscription'),
+    path('profile/', profile, name='users-profile'),
 ]
