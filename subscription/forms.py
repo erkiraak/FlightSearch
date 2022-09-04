@@ -4,6 +4,8 @@ from django.db.models import Q, F
 from subscription.models import Subscription
 
 
+# TODO delete?
+
 class SubscriptionForm(forms.ModelForm):
     email = forms.EmailField(initial={'email': 'erjki@maial.ee'})
 
@@ -23,4 +25,3 @@ class SubscriptionForm(forms.ModelForm):
 
         def validate(self):
             pass
-

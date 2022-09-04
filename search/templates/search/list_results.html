@@ -13,14 +13,14 @@
 </ul>
 
 {% if user.is_authenticated %}
-<form action="{% url 'search'  search.pk %}" enctype="multipart/form-data" method="post">
+<form action="{% url 'create_subscription'  search.pk %}" method="get" >
     {% csrf_token %}
-    <input type="submit" name="submit" value="Subscribe to this search">
+    {{error}}
+    <input type="submit" name="submit" value="Subscribe to this search" >
 </form>
 
 {% else %}
-<form action="{% url 'search'  search.pk %}" enctype="multipart/form-data" method="post">
-    {% csrf_token %}
+<form>
     <input disabled type="submit" name="submit" value="Subscribe to this search">
 </form>
 

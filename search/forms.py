@@ -1,6 +1,6 @@
 from django import forms
 from django.core.exceptions import ValidationError
-from django.db.models import Q, F
+from django.db.models import Q
 from search.models import Search, Airport
 
 
@@ -9,16 +9,14 @@ class DateInput(forms.DateInput):
 
 
 class SearchForm(forms.ModelForm):
-
+    # TODO remove filtering once airport search result is Airport object
     def clean_fly_from(self):
         data = self.cleaned_data['fly_from']
         airport = Airport.objects.filter(
             Q(iata_code__icontains=data) |
             Q(name__icontains=data) |
             Q(city__icontains=data) |
-            Q(city_code__icontains=data) |
-            Q(country__icontains=data) |
-            Q(country_code__icontains=data)
+            Q(country__icontains=data)
         )
 
         if airport.exists():
@@ -33,9 +31,7 @@ class SearchForm(forms.ModelForm):
             Q(iata_code__icontains=data) |
             Q(name__icontains=data) |
             Q(city__icontains=data) |
-            Q(city_code__icontains=data) |
-            Q(country__icontains=data) |
-            Q(country_code__icontains=data)
+            Q(country__icontains=data)
         )
 
         if airport.exists():
