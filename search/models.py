@@ -1,12 +1,14 @@
+from allauth.account.signals import password_changed, user_logged_in, user_logged_out
 
 from constants import CABINS, CURRENCIES, SEATS, STOPOVERS, FLIGHT_TYPE, SEARCH_TYPE, FLEXIBLE, NIGHTS
 from datetime import datetime, timedelta
 
+from django.contrib import messages
 from django.contrib.auth.models import User
 from django.db import models
+from django.dispatch import receiver
 
 import environ
-
 
 class Airport(models.Model):
     iata_code = models.CharField(max_length=3, primary_key=True)
@@ -15,6 +17,7 @@ class Airport(models.Model):
     city_code = models.CharField(max_length=3, null=True, default=None)
     country = models.CharField(max_length=100)
     country_code = models.CharField(max_length=2, null=True, default=None)
+
 
 # TODO add airline API call
 class Airline(models.Model):
@@ -47,7 +50,6 @@ class Flight(models.Model):
     fare_category = models.CharField(max_length=1)
     segment_no = models.IntegerField()
     return_flight = models.BooleanField()
-
 
     # TODO implement flight creation
     @classmethod
