@@ -1,15 +1,9 @@
 from constants import (CABINS, CURRENCIES, SEATS, STOPOVERS,
                        FLIGHT_TYPE, SEARCH_TYPE, FLEXIBLE, NIGHTS)
-
-from allauth.account.signals import password_changed, user_logged_in, user_logged_out
-
-from constants import CABINS, CURRENCIES, SEATS, STOPOVERS, FLIGHT_TYPE, SEARCH_TYPE, FLEXIBLE, NIGHTS
 from datetime import datetime, timedelta
 
-from django.contrib import messages
 from django.contrib.auth.models import User
 from django.db import models
-from django.dispatch import receiver
 
 import environ
 

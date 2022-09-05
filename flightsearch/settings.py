@@ -53,10 +53,12 @@ INSTALLED_APPS = [
     'allauth.socialaccount',
     'allauth.socialaccount.providers.google',
     'environ',
+    'django_crontab',
     'users',
     'viewer',
     'search',
     'subscription',
+    'send_email'
 ]
 
 MIDDLEWARE = [
@@ -109,16 +111,20 @@ DATABASES = {
 
 AUTH_PASSWORD_VALIDATORS = [
     {
-        'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
+        'NAME': 'django.contrib.auth.password_validation.'
+                'UserAttributeSimilarityValidator',
     },
     {
-        'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
+        'NAME': 'django.contrib.auth.password_validation.'
+                'MinimumLengthValidator',
     },
     {
-        'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
+        'NAME': 'django.contrib.auth.password_validation.'
+                'CommonPasswordValidator',
     },
     {
-        'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
+        'NAME': 'django.contrib.auth.password_validation.'
+                'NumericPasswordValidator',
     },
 ]
 
@@ -171,3 +177,38 @@ SOCIALACCOUNT_PROVIDERS = {
         }
     }
 }
+
+
+
+"""
+Before adding jobs to crontab change the log file location or disable logging
+by removing the last argument.
+
+Commands:
+    python3 manage.py crontab add  - add all jobs to crontab
+    python3 manage.py crontab show  - view all jobs in crontab
+    python3 manage.py crontab remove  - remove all jobs from crontab
+"""
+CRONJOBS = [
+    # runs every 5 minutes
+    # (
+    #     '*/5 * * * *',
+    #     'send_email.cron.cron_job_send_email',
+    #     '>> /home/erki/Documents/IT/PycharmProjects/FlightSearch/cron_job.log'
+    # ),
+
+    # runs every day at 06:00 UCT
+    (
+        '0 6 * * *',
+        'send_email.cron.cron_job_send_email',
+        '>> /home/erki/Documents/IT/PycharmProjects/FlightSearch/cron_job.log'
+    ),
+
+    # runs every day at 03:00 UCT
+    (
+        '0 3 * * *',
+        'search.cron.cron_job_delete_search_objects_without_user',
+        '>> /home/erki/Documents/IT/PycharmProjects/FlightSearch/cron_job.log'
+    ),
+
+]
