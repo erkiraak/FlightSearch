@@ -111,6 +111,28 @@ class Search(models.Model):
     limit = models.IntegerField(default=1)
     locale = models.CharField(max_length=5, default='en')
 
+    def save(self, *args, **kwargs):
+        if self.user:
+            total_objects = Search.objects.filter(user=self.user).count()
+
+            if total_objects >= 25:
+                self.delete_search(24)
+
+        super().save(*args, **kwargs)
+
+    def delete_search(self, nr_remaining):
+        # get all primary keys for searches older than latest x objects
+        pk = Search.objects.filter(user=self.user
+                                   ).order_by('-id'
+                                              ).values('pk')[nr_remaining:]
+
+        # delete Search objects in list skipping protected ones
+        for key in pk:
+            try:
+                Search.objects.get(pk=key['pk']).delete()
+            except models.ProtectedError as e:
+                print(e)
+
     @classmethod
     def create_search_object_from_request(cls, cleaned_data, user):
         """

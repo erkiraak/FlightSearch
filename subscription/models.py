@@ -7,7 +7,7 @@ from search.models import Search
 
 
 class Subscription(models.Model):
-    search = models.ForeignKey(Search, on_delete=models.CASCADE)
+    search = models.ForeignKey(Search, on_delete=models.PROTECT)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     price_to = models.PositiveIntegerField(blank=True, null=True)
     curr = models.CharField(max_length=3, choices=CURRENCIES, default='EUR')
