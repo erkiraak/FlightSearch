@@ -1,7 +1,6 @@
 from .api_search_easypnr import get_airport_data_from_easypnr_api
 from .api_search_kiwi import search_from_kiwi_api
 from django.shortcuts import render
-from django.views.generic import DetailView
 from .forms import SearchForm
 from .models import Search, Result
 
