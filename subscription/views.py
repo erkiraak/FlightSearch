@@ -8,7 +8,9 @@ from .models import Subscription
 from search.models import Search
 
 
-# TODO change CreateSubscription type to avoid POST issues
+# TODO OPTIONAL change CreateSubscription type to avoid POST issues
+# TODO OPTIONAL add subscription number limit
+
 class CreateSubscription(LoginRequiredMixin, CreateView):
     template_name = 'create_subscription.html'
     model = Subscription
