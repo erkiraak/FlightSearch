@@ -1,8 +1,54 @@
 {% extends "base.html" %}
-{% block title %}Profile Page{% endblock title %}
-{% block content %}
-    <div class="row my-3 p-3">
-        <h1>This is the profile page for {{user.first_name.title}}</h1>
-    </div>
 
+{% block content %}
+ <!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <title>Profile</title>
+  <meta charset="utf-8">
+  <link rel="stylesheet" type="text/css">
+  <link rel="stylesheet" href="../../static/user_profile.css">
+</head>
+
+<body>
+  <section class="user-profile">
+    <div class="header">
+      <div class="cover">
+        <div class="user-profile-avatar">
+          <img src="http://www.coopernortetelecom.com.br/assets/images/author-1.png" alt="img-avatar">
+        </div>
+      </div>
+    </div>
+    <div class="user-profile-body">
+      {% if user.is_authenticated %}
+      <div class="user-profile-bio">
+        <h3 class="title">{{user.username.title}}</h3>
+      </div>
+      <div class="user-profile-footer">
+        <ul class="data-list">
+          <li>Name: {{user.username.title}}</li>
+          <li>Surname: {{user.last_name.title}}</li>
+          <li> email: {{user.email}}</li>
+          <li>Bio: {{user.profile.bio}}</li>
+          <li>Avatar: {{user.profile.avatar}}</li>
+          <li>Subscriptions:
+                {{s.search.fly_from}} - {{s.search.fly_to}}
+          </li>
+
+          {% else %}
+          {% endif %}
+        </ul>
+      </div>
+      <div class="d-grid gap-2 d-md-block">
+        <br><a type="button" class="btn btn-outline-dark"
+               class="btn btn-primary" href="#" role="button">Edit profile</a>
+        <a type="button" class="btn btn-outline-danger" class="btn btn-primary" href="#" role="button">Remove profile</a>
+      </div>
+    </div>
+  </section>
 {% endblock content %}
+</body>
+
+
+</html>

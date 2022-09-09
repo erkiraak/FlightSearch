@@ -1,13 +1,175 @@
 {% extends "base.html" %}
-
 {% block content %}
+{% load static %}
 
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>FlighSearch</title>
+    <link
+      href="https://fonts.googleapis.com/css?family=Lato:400,700"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.14.0/css/all.min.css"
+    />
 
-<form class="form-wrapper" action="/" enctype="multipart/form-data" method="post">
-    {% csrf_token %}
-    {{error}}
-    {{ form.as_p }}
-    <input type="submit" name="submit" value="Submit" id="submit">
-</form>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <link rel="stylesheet" href="../../../static/search.css">
+    <script src="../../../static/script.js"></script>
+  </head>
+  <body>
+    <main>
+      <div id="background-wrap">
+        <div class="x1">
+          <div class="cloud"></div>
+        </div>
 
+        <div class="x2">
+          <div class="cloud"></div>
+        </div>
+
+        <div class="x3">
+          <div class="cloud"></div>
+        </div>
+
+        <div class="x4">
+          <div class="cloud"></div>
+        </div>
+
+        <div class="x5">
+          <div class="cloud"></div>
+        </div>
+      </div>
+      <section id="booking">
+        <article id="cta">
+          <header>
+            <h1>FlightSearch</h1>
+            <br />
+            <p>
+              Try Erki's and Kalvi's super cool search for cheap flight tickets.
+            </p>
+          </header>
+        </article>
+
+        <article id="formSection">
+          <form action="#" id="flightBook">
+            <div id="tripType" class="form-group">
+              <label for="roundTrip">
+                <input type="radio" id="roundTrip" name="flight-type" />
+                <!-- span tag to make the buttons customize  -->
+                <span></span>Roundtrip
+              </label>
+              <label for="oneWay">
+                <input type="radio" id="oneWay" name="flight-type" />
+                <span></span>One way
+              </label>
+            </div>
+
+            <div id="placeDate">
+              <div class="form-group">
+                <label class="form-label" for="flyingFrom">From</label>
+                <input
+                  class="form-control"
+                  id="flyingFrom"
+                  type="text"
+                  placeholder="City or airport"
+                />
+              </div>
+
+              <div class="form-group">
+                <label class="form-label" for="flyingTo">To</label>
+                <input
+                  class="form-control"
+                  id="flyingTo"
+                  type="text"
+                  placeholder="City or airport"
+                />
+              </div>
+
+              <div class="form-group">
+                <label class="form-label" for="departing">Departing date</label>
+                <input
+                  class="form-control"
+                  id="departing"
+                  type="date"
+                  required
+                />
+                <i class="fas fa-calendar-alt"></i>
+              </div>
+
+              <div class="form-group">
+                <label class="form-label" for="returning">Returning date</label>
+                <input
+                  class="form-control"
+                  id="returning"
+                  type="date"
+                  required
+                />
+                <i class="fas fa-calendar-alt"></i>
+              </div>
+            </div>
+            <!-- end details -->
+
+            <h3>Passengers</h3>
+            <div id="details">
+              <!--passengers -->
+              <div class="form-group selectNum">
+                <label class="stepper-label" for="numOfAdults"
+                  >Adults (18+)</label
+                >
+                <div class="stepper">
+                  <button class="minus"><i class="fas fa-minus"></i></button>
+                  <input
+                    class="stepper-control"
+                    id="numOfAdults"
+                    type="number"
+                    value="0"
+                  />
+                  <button class="plus"><i class="fas fa-plus"></i></button>
+                </div>
+              </div>
+
+              <div class="form-group selectNum">
+                <label class="stepper-label" for="numOfKids"
+                  >Children (0-17)</label
+                >
+                <div class="stepper">
+                  <button class="minus" id="minus">
+                    <i class="fas fa-minus"></i>
+                  </button>
+                  <input
+                    class="stepper-control"
+                    id="numOfKids"
+                    type="number"
+                    value="0"
+                    max="10"
+                  />
+                  <button class="plus"><i class="fas fa-plus"></i></button>
+                </div>
+              </div>
+
+              <div class="form-group travelClass">
+                <label class="form-label" for="travClass">Travel class</label>
+                <select class="form-control" id="travClass">
+                  <option>Economy class</option>
+                  <option>Business class</option>
+                  <option>First class</option>
+                </select>
+                <i class="fa fa-arrow-down select-arrow" aria-hidden="true"></i>
+              </div>
+            </div>
+
+            <div class="form-btn">
+              <button class="submit-btn">Show flights</button>
+            </div>
+          </form>
+        </article>
+      </section>
+    </main>
+  </body>
 {% endblock %}
+</html>

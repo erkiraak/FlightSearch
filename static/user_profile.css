@@ -1,0 +1,87 @@
+.user-profile .user-profile-body,
+.user-profile {
+  display: flex;
+  flex-wrap: wrap;
+  flex-direction: column;
+  align-items: center;
+}
+.user-profile .header {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  margin-bottom: 1.25rem;
+}
+.user-profile .cover {
+  display: block;
+  position: relative;
+  width: 90%;
+  height: 16rem;
+  background: -webkit-linear-gradient(to right, #00f260, #0575e6);
+  background: linear-gradient(to right, #00f260, #0575e6);
+  border-radius: 0 0 20px 20px;
+}
+.user-profile .user-profile-body {
+  width: 70%;
+  position: relative;
+  max-width: 750px;
+}
+.user-profile .user-profile-body .title {
+  display: block;
+  width: 100%;
+  font-size: 1.75em;
+  margin-bottom: 0.5rem;
+}
+
+.user-profile .user-profile-footer,
+.user-profile .user-profile-bio {
+  background: rgba(255, 255, 255, 0.18);
+  border-radius: 16px;
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+  backdrop-filter: blur(7px);
+  -webkit-backdrop-filter: blur(7px);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  display: flex;
+  flex-wrap: wrap;
+  padding: 1.5rem 2rem;
+
+
+  width: 100%;
+}
+.user-profile .user-profile-bio {
+  margin-bottom: 1.25rem;
+  text-align: center;
+}
+.user-profile .data-list {
+  width: 90%;
+  list-style: none;
+}
+.user-profile .data-list li {
+  padding: 10px 0;
+}
+.user-profile .cover,
+.user-profile .user-profile-body {
+  width: 95%;
+}
+.user-profile-avatar {
+  display: flex;
+  width: 180px;
+  height: 180px;
+  align-items: center;
+  justify-content: center;
+  border: 7px solid #ffffff;
+  background-color: #dfe5f2;
+  border-radius: 50%;
+  box-shadow: 0 0 12px rgba(0, 0, 0, 0.2);
+  position: absolute;
+  bottom: -40px;
+  left: calc(50% - 90px);
+  z-index: 1;
+}
+
+.user-profile-avatar img {
+  width: 100%;
+  position: relative;
+  border-radius: 50%;
+}
+
+

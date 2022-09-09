@@ -15,7 +15,6 @@ class Airport(models.Model):
     country = models.CharField(max_length=100)
 
 
-
 # TODO add airline API call
 class Airline(models.Model):
     name = models.CharField(max_length=50, null=True, blank=True)

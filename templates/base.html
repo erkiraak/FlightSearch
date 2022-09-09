@@ -28,12 +28,7 @@
         <a class="navbar-brand" href="/">FlightSearch</a>
 
 
-        <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
-            <div class="navbar-nav">
-                <a class="nav-item nav-link active" href="/">
-                    Home
-                </a>
-            </div>
+
         </div>
 
 
@@ -48,7 +43,6 @@
                     <li><a href="{% url 'account_login' %}">Login</a></li>
                 {% endif %}
             </ul>
-    </div>
 </nav>
 <nav>
 {% if messages %}
@@ -62,13 +56,9 @@
  {% endfor %}
 {% endif %}
 </nav>
-<div class="container">
-    <div class="jumbotron">
-
-        {% block content %}
+<div>
+    {% block content %}
         {% endblock %}
-
-    </div>
 </div>
 </body>
 
