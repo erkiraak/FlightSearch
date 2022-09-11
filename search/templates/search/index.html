@@ -20,7 +20,6 @@
 
                     <!--        ORIGIN            -->
                     <div class="col-sm fieldWrapper mb-2">
-                        {{ form.fly_from.errors }}
                         <label class="form-label">
                             {{ form.fly_from.label }}
                         </label>
@@ -29,12 +28,14 @@
                                 ><i class="bi-pin-map"></i>
                                 </span>
                             {{ form.fly_from }}
+                            {{ form.fly_from.errors }}
+
                         </div>
                     </div>
 
+
                     <!--        DESTINATION            -->
                     <div class="col-sm fieldWrapper mb-2">
-                        {{ form.fly_to.errors }}
                         <label class="form-label">
                             {{ form.fly_to.label }}
                         </label>
@@ -43,6 +44,7 @@
                                 ><i class="bi-pin-map-fill"></i>
                                 </span>
                             {{ form.fly_to }}
+                            {{ form.fly_to.errors }}
                         </div>
                     </div>
 
@@ -127,7 +129,7 @@
                             {{ form.nights_in_dst_from.errors }}
                             {{ form.nights_in_dst_to.errors }}
                             <label class="form-label">
-                                Time in destination
+                                Trip length
                             </label>
                             <div class="input-group mb-2">
                                 <label class="input-group-text">
@@ -288,12 +290,20 @@
 
                 </div>
 
-                <button type="submit" id="search-button" class="w-100 btn btn-primary">
-                    Search
-                </button>
-            </div>
 
-            <script src="./script.js"></script>
+            </div>
+        </div>
+        <div class="d-grid gap-2 col-12 mx-auto">
+
+            <button type="submit" id="search-button"
+                    class="w-100 btn btn-primary">
+                <p class="h5">Search</p>
+
+            </button>
+        </div>
+
+
+        <script src="./script.js"></script>
 </form>
 
 <script>

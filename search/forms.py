@@ -1,6 +1,5 @@
 import datetime
 from django import forms
-from django.db import models
 from django.core.exceptions import ValidationError
 from search.models import Search, Airport
 
@@ -87,21 +86,23 @@ class SearchForm(forms.ModelForm):
             'price_to': 'to',
             'adults': 'Adults ',
             'infants': 'Infants ',
+            'fly_from': 'Origin ',
+            'fly_to': 'Destination ',
         }
-
-    def clean(self):
-        self.data['fly']
-        super().clean()
 
     def clean_fly_from(self):
         fly_from = self.cleaned_data['fly_from']
-        airport = Airport.objects.get(city__icontains=fly_from)
-        return airport
+        if fly_from is None:
+            raise ValidationError("Please enter a valid origin")
+        else:
+            return fly_from
 
     def clean_fly_to(self):
         fly_to = self.cleaned_data['fly_to']
-        airport = Airport.objects.get(city__icontains=fly_to)
-        return airport
+        if fly_to is None:
+            raise ValidationError("Please enter a valid destination")
+        else:
+            return fly_to
 
     def clean_departure_date(self):
         departure_date = self.cleaned_data['departure_date']
