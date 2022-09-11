@@ -11,17 +11,21 @@ def create_query_for_kiwi_api(search: Search) -> dict:
     :param search: Search object
     :return: dictionary containing search parameters
     """
-    # TODO create proper IATA search
+    if search.flexible:
+        flexible = 3
+    else:
+        flexible = 0
+
     query = {
-        'fly_from': search.fly_from.upper(),
-        'fly_to': search.fly_to.upper(),
+        'fly_from': search.fly_from.iata_code,
+        'fly_to': search.fly_to.iata_code,
         'date_from': (
                 search.departure_date
-                - timedelta(days=search.flexible)
+                - timedelta(days=flexible)
         ).strftime("%d/%m/%Y"),
         'date_to': (
                 search.departure_date
-                + timedelta(days=search.flexible)
+                + timedelta(days=flexible)
         ).strftime("%d/%m/%Y"),
         'flight_type': search.flight_type,
         'adults': search.adults,
@@ -39,11 +43,11 @@ def create_query_for_kiwi_api(search: Search) -> dict:
 
     if search.flight_type == "round":
         query['return_from'] = (
-                search.return_date - timedelta(days=search.flexible)
+                search.return_date - timedelta(days=flexible)
         ).strftime("%d/%m/%Y")
 
         query['return_to'] = (
-                search.return_date + timedelta(days=search.flexible)
+                search.return_date + timedelta(days=flexible)
         ).strftime("%d/%m/%Y")
 
     if not search.max_fly_duration != '':
@@ -51,6 +55,12 @@ def create_query_for_kiwi_api(search: Search) -> dict:
 
     if search.max_stopovers not in ['', None]:
         query['max_stopovers'] = search.max_stopovers
+
+    if search.price_to:
+        query['price_to'] = search.price_to
+
+    if search.price_from:
+        query['price_from'] = search.price_from
 
     return query
 
