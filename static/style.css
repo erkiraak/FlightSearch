@@ -29,7 +29,7 @@ a {
 	-webkit-box-shadow: 0 3px 3px rgba(255,255,255,.1), 0 3px 0 #bbb, 0 4px 0 #aaa, 0 5px 5px #444;
 	-moz-box-shadow: 0 3px 3px rgba(255,255,255,.1), 0 3px 0 #bbb, 0 4px 0 #aaa, 0 5px 5px #444;
 	box-shadow: 0 3px 3px rgba(255,255,255,.1), 0 3px 0 #bbb, 0 4px 0 #aaa, 0 5px 5px #444;
-	margin: 30px auto;
+	margin: 20px auto;
 	overflow: hidden;
 	padding: 8px;
 	max-width: 800px;
@@ -122,3 +122,4 @@ a {
 .flex-1 {
   flex: 1;
 }
+

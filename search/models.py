@@ -101,11 +101,15 @@ class Search(models.Model):
         Airport,
         on_delete=models.CASCADE,
         related_name='search_fly_from',
+        blank=True,
+        null=True
     )
     fly_to = models.ForeignKey(
         Airport,
         on_delete=models.CASCADE,
-        related_name='search_fly_to'
+        related_name='search_fly_to',
+        blank=True,
+        null=True
     )
     departure_date = models.DateField()
     return_date = models.DateField(blank=True, null=True)

@@ -1,10 +1,23 @@
 from .api_search_easypnr import get_airport_data_from_easypnr_api
 from .api_search_kiwi import search_from_kiwi_api
+from django.db.models import ObjectDoesNotExist, Q
 from django.http import JsonResponse
 from django.shortcuts import render
 from .forms import SearchForm
 from .models import Search, Result, Airport
 
+
+def get_airport(search):
+    try:
+        iata = search[-4:-1]
+        city = search[:-5]
+
+        airport = Airport.objects.get(Q(iata_code=iata), Q(city=city))
+    except (ObjectDoesNotExist, IndexError):
+        airport = None
+
+    finally:
+        return airport
 
 def search_view(request):
     # Check if airport data is in the database.
@@ -19,18 +32,19 @@ def search_view(request):
         names = list()
 
         for airport in qs:
-            names.append(f'{airport.city}')
+            names.append(f'{airport.city}({airport.iata_code})')
         return JsonResponse(names, safe=False)
 
     if request.method == 'POST':
 
-        if request.POST['fly_from']:
-
+        if request.POST['fly_from'] \
+                and not isinstance(request.POST['fly_from'], Airport):
             temp_dict = request.POST.copy()
-            temp_dict['fly_from'] = Airport.objects.get(city=temp_dict['fly_from'])
-            temp_dict['fly_to'] = Airport.objects.get(city=temp_dict['fly_to'])
-            request.POST = temp_dict
 
+            temp_dict['fly_from'] = get_airport(temp_dict['fly_from'])
+            temp_dict['fly_to'] = get_airport(temp_dict['fly_to'])
+
+            request.POST = temp_dict
 
         form = SearchForm(request.POST)
 
@@ -79,7 +93,7 @@ def search_view(request):
             template = 'search/index.html'
             context = {
                 'form': form,
-                'error': 'Something happened'
+                # 'error': 'Search not valid'
             }
     else:
         form = SearchForm(None)
