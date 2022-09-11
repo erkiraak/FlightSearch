@@ -3,11 +3,306 @@
 {% block content %}
 
 
-<form class="form-wrapper" action="/" enctype="multipart/form-data" method="post">
+<form class="form-wrapper" action="/" enctype="multipart/form-data"
+      method="post">
     {% csrf_token %}
     {{error}}
-    {{ form.as_p }}
-    <input type="submit" name="submit" value="Submit" id="submit">
+
+
+    <!--        Locations            -->
+
+    <div class="container-sm">
+        <div class="my-2 card">
+            <div class="card-body">
+                <h5 class="card-title">Locations</h5>
+
+                <div class="row">
+
+                    <!--        ORIGIN            -->
+                    <div class="col-sm fieldWrapper mb-2">
+                        {{ form.fly_from.errors }}
+                        <label class="form-label">
+                            {{ form.fly_from.label }}
+                        </label>
+                        <div class="input-group">
+                                <span class="input-group-text"
+                                ><i class="bi-pin-map"></i>
+                                </span>
+                            {{ form.fly_from }}
+                        </div>
+                    </div>
+
+                    <!--        DESTINATION            -->
+                    <div class="col-sm fieldWrapper mb-2">
+                        {{ form.fly_to.errors }}
+                        <label class="form-label">
+                            {{ form.fly_to.label }}
+                        </label>
+                        <div class="input-group">
+                                <span class="input-group-text"
+                                ><i class="bi-pin-map-fill"></i>
+                                </span>
+                            {{ form.fly_to }}
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+
+            <!--        Dates            -->
+            <div class="mb-2 col">
+                <div class="h-100 card">
+                    <div class="card-body">
+                        <h5 class="card-title">Dates</h5>
+
+                        <div class="row">
+
+                            <!--        Search type            -->
+                            <div class="col-sm fieldWrapper mb-2">
+                                {{ form.search_type.errors }}
+                                <label class="form-label">
+                                    {{ form.search_type.label }}
+                                </label>
+                                {{ form.search_type }}
+                            </div>
+
+                            <!--        Flight type            -->
+                            <div class="col-sm fieldWrapper mb-2">
+                                {{ form.flight_type.errors }}
+                                <label class="form-label">
+                                    {{ form.flight_type.label }}
+                                </label>
+                                {{ form.flight_type }}
+                            </div>
+
+                        </div>
+
+                        <!--        Departure date            -->
+                        <div class="mb-2">
+                            {{ form.search_type.errors }}
+                            <label class="form-label">
+                                {{ form.departure_date.label }}
+                            </label>
+                            <div class="input-group">
+                                <span class="input-group-text"
+                                ><i class="bi-calendar"></i>
+                                </span>
+                                {{ form.departure_date }}
+                            </div>
+                        </div>
+
+                        <!--        Return date            -->
+                        <div class="mb-2">
+                            {{ form.search_type.errors }}
+                            <label class="form-label">
+                                {{ form.return_date.label }}
+                            </label>
+                            <div class="input-group">
+                                <span class="input-group-text"
+                                ><i class="bi-calendar-fill"></i>
+                                </span>
+                                {{ form.return_date }}
+                            </div>
+                        </div>
+
+                        <!--        Flexible            -->
+                        <div class="d-flex align-items-end">
+                            <div class="mb-2">
+                                {{ form.search_type.errors }}
+
+
+                                <label class="form-label">
+                                    {{ form.flexible.label }}
+                                </label>
+                                {{ form.flexible }}
+
+                            </div>
+                        </div>
+
+                        <!--        Nights in destination            -->
+                        <div>
+                            {{ form.nights_in_dst_from.errors }}
+                            {{ form.nights_in_dst_to.errors }}
+                            <label class="form-label">
+                                Time in destination
+                            </label>
+                            <div class="input-group mb-2">
+                                <label class="input-group-text">
+                                    {{ form.nights_in_dst_from.label }}
+                                </label>
+                                {{ form.nights_in_dst_from }}
+
+                                <label class="input-group-text">
+                                    {{ form.nights_in_dst_to.label }}
+                                </label>
+                                {{ form.nights_in_dst_to }}
+
+                                <div class="input-group-append">
+                                    <span class="input-group-text">nights</span>
+                                </div>
+
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+            <!--        DETAILS            -->
+
+            <div class="mb-2 col">
+                <div class="h-100 card">
+                    <div class="card-body">
+                        <h5 class="card-title">Details</h5>
+
+                        <div class="mb-2">
+
+                            {{ form.selected_cabins.errors }}
+
+                            <label class="form-label">
+                                {{ form.selected_cabins.label }}
+                            </label>
+
+                            {{ form.selected_cabins }}
+                        </div>
+
+                        <label class="form-label">Passengers</label>
+
+                        <div class="mb-2">
+                            <div class="input-group">
+                                {{ form.adults.errors }}
+
+                                <label class="input-group-text w-25">
+                                    {{ form.adults.label }}
+                                </label>
+
+                                {{ form.adults }}
+                            </div>
+                            <span id="adults-label" class="form-text"
+                            >12 years old and older</span
+                            >
+                        </div>
+
+                        <div class="mb-2">
+                            <div class="input-group">
+                                {{ form.children.errors }}
+
+                                <label class="input-group-text w-25">
+                                    {{ form.children.label }}
+                                </label>
+
+                                {{ form.children }}
+                            </div>
+                            <span id="children-label" class="form-text"
+                            >2 to 12 years old</span
+                            >
+                        </div>
+                        <div class="mb-2">
+                            <div class="input-group">
+                                {{ form.infants.errors }}
+
+                                <label class="input-group-text w-25">
+                                    {{ form.infants.label }}
+                                </label>
+
+                                {{ form.infants }}
+                            </div>
+                            <span id="infants-label" class="form-text"
+                            >Up to 2 years old</span
+                            >
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+        </div>
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">Filters</h5>
+                <div class="row">
+
+                    <!--        Max fly duration            -->
+                    <div class="col-sm fieldWrapper mb-2">
+                        {{ form.max_fly_duration.errors }}
+                        <label class="form-label">
+                            {{ form.max_fly_duration.label }}
+                        </label>
+                        <div class="input-group">
+                            {{ form.max_fly_duration }}
+                            <div class="input-group-append">
+                                <span class="input-group-text">hours</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!--        Max connections            -->
+                    <div class="col-sm fieldWrapper mb-2">
+                        {{ form.max_stopovers.errors }}
+                        <label class="form-label">
+                            {{ form.max_stopovers.label }}
+                        </label>
+                        <div class="input-group">
+                            {{ form.max_stopovers }}
+                            <div class="input-group-append">
+                                <span class="input-group-text">stops</span>
+                            </div>
+                        </div>
+                        <span id="connections-label" class="form-text"
+                        >0 for direct only</span
+                        >
+                    </div>
+
+                    <!--        Price            -->
+                    <div class="col-md-5 fieldWrapper mb-2">
+
+                        <label class="form-label">
+                            Price
+                        </label>
+                        <div class="input-group mb-2">
+                            <label class="input-group-text">
+                                {{ form.price_from.label }}
+                            </label>
+                            {{ form.price_from }}
+
+                            <label class="input-group-text">
+                                {{ form.price_to.label }}
+                            </label>
+                            {{ form.price_to }}
+                        </div>
+
+                    </div>
+
+                    <div class="col-md-2 fieldWrapper mb-2">
+                        {{ form.curr.errors }}
+                        <label class="form-label">
+                            {{ form.curr.label }}
+                        </label>
+                        <div class="input-group">
+                            {{ form.curr }}
+                        </div>
+                    </div>
+
+                </div>
+
+                <button type="submit" id="search-button" class="w-100 btn btn-primary">
+                    Search
+                </button>
+            </div>
+
+            <script src="./script.js"></script>
 </form>
+
+<script>
+    $(function () {
+        $("#id_fly_from, #id_fly_to").autocomplete({
+            source: "{% url 'index' %}",
+            minLength: 2
+        });
+    });
+</script>
 
 {% endblock %}

@@ -1,6 +1,7 @@
+import datetime
 from django import forms
+from django.db import models
 from django.core.exceptions import ValidationError
-from django.db.models import Q
 from search.models import Search, Airport
 
 
@@ -9,52 +10,63 @@ class DateInput(forms.DateInput):
 
 
 class SearchForm(forms.ModelForm):
-    # TODO remove filtering once airport search result is Airport object
-    def clean_fly_from(self):
-        data = self.cleaned_data['fly_from']
-        airport = Airport.objects.filter(
-            Q(iata_code__icontains=data) |
-            Q(name__icontains=data) |
-            Q(city__icontains=data) |
-            Q(country__icontains=data)
-        )
-
-        if airport.exists():
-            return airport.first().iata_code
-
-        else:
-            raise ValidationError("Please enter a valid destination")
-
-    def clean_fly_to(self):
-        data = self.cleaned_data['fly_to']
-        airport = Airport.objects.filter(
-            Q(iata_code__icontains=data) |
-            Q(name__icontains=data) |
-            Q(city__icontains=data) |
-            Q(country__icontains=data)
-        )
-
-        if airport.exists():
-            return airport.first().iata_code
-
-        else:
-            raise ValidationError("Please enter a valid destination")
-
-    def clean_return_date(self):
-        departure_date = self.cleaned_data['departure_date']
-        return_date = self.cleaned_data['return_date']
-        if departure_date > return_date:
-            raise ValidationError("Return date cannot be before departure date")
-
-        else:
-            return return_date
-
     class Meta:
         model = Search
         exclude = ('user', 'locale', 'limit')
         widgets = {
-            'departure_date': DateInput(),
-            'return_date': DateInput(),
+            'fly_from': forms.TextInput(attrs={'class': "form-control"}),
+            'fly_to': forms.TextInput(attrs={'class': "form-control"}),
+            'search_type': forms.Select(attrs={'class': "form-select"}),
+            'flight_type': forms.Select(attrs={'class': "form-select"}),
+            'curr': forms.Select(attrs={'class': "form-select"}),
+            'selected_cabins': forms.Select(attrs={'class': "form-select"}),
+            'departure_date': DateInput(attrs={'class': "form-control"}),
+            'return_date': DateInput(attrs={'class': "form-control"}),
+            'nights_in_dst_from': forms.NumberInput(attrs={
+                'class': "form-control",
+                'min': 1,
+                'max': 90,
+            }), 'nights_in_dst_to': forms.NumberInput(attrs={
+                'class': "form-control",
+                'min': 1,
+                'max': 90,
+            }),
+            'flexible': forms.CheckboxInput(
+                attrs={'class': "form-check-input"}),
+            'adults': forms.NumberInput(attrs={
+                'class': "form-control",
+                'min': 0,
+                'max': 10,
+            }),
+            'children': forms.NumberInput(attrs={
+                'class': "form-control",
+                'min': 0,
+                'max': 10,
+            }),
+            'infants': forms.NumberInput(attrs={
+                'class': "form-control",
+                'min': 0,
+                'max': 10,
+            }),
+            'max_fly_duration': forms.NumberInput(attrs={
+                'class': "form-control",
+                'min': 1,
+                'max': 96,
+            }),
+            'max_stopovers': forms.NumberInput(attrs={
+                'class': "form-control",
+                'min': 0,
+                'max': 5,
+            }),
+            'price_from': forms.NumberInput(attrs={
+                'class': "form-control",
+                'min': 0,
+                'min-width': 320
+            }),
+            'price_to': forms.NumberInput(attrs={
+                'class': "form-control",
+                'min': 0,
+            }),
         }
 
         help_texts = {
@@ -63,4 +75,49 @@ class SearchForm(forms.ModelForm):
         }
         labels = {
             'curr': 'Currency:',
+            'selected_cabins': 'Travel class',
+            'search_type': 'Search',
+            'flight_type': 'Flight',
+            'flexible': 'Flexible dates (±3 days)',
+            'nights_in_dst_from': 'From',
+            'nights_in_dst_to': 'to',
+            'max_fly_duration': 'Duration up to',
+            'max_stopovers': 'Connections up to',
+            'price_from': 'From',
+            'price_to': 'to',
+            'adults': 'Adults ',
+            'infants': 'Infants ',
         }
+
+    def clean(self):
+        self.data['fly']
+        super().clean()
+
+    def clean_fly_from(self):
+        fly_from = self.cleaned_data['fly_from']
+        airport = Airport.objects.get(city__icontains=fly_from)
+        return airport
+
+    def clean_fly_to(self):
+        fly_to = self.cleaned_data['fly_to']
+        airport = Airport.objects.get(city__icontains=fly_to)
+        return airport
+
+    def clean_departure_date(self):
+        departure_date = self.cleaned_data['departure_date']
+        today = datetime.datetime.now().date()
+        if today > departure_date:
+            raise ValidationError("Departure date cannot be in the past")
+        else:
+            return departure_date
+
+    def clean_return_date(self):
+        departure_date = self.cleaned_data['departure_date']
+        return_date = self.cleaned_data['return_date']
+        today = datetime.datetime.now().date()
+        if departure_date > return_date:
+            raise ValidationError("Return date cannot be before departure date")
+        elif today > return_date:
+            raise ValidationError("Return date cannot be in the past")
+        else:
+            return return_date

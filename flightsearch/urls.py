@@ -15,10 +15,9 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
-
 from search.views import search_view
 from users.views import profile
-from viewer.views import login_view, logged_in_view
+from viewer.views import logged_in_view
 from subscription.views import (CreateSubscription,
                                 ViewSubscription,
                                 ListSubscription,
