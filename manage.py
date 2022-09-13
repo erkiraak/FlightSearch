@@ -3,8 +3,6 @@
 import os
 import sys
 
-from search.api_search_easypnr import get_airport_data_from_easypnr_api
-
 
 def main():
     """Run administrative tasks."""
@@ -17,11 +15,13 @@ def main():
             "available on your PYTHONPATH environment variable? Did you "
             "forget to activate a virtual environment?"
         ) from exc
+
     execute_from_command_line(sys.argv)
-
-    get_airport_data_from_easypnr_api()
-
 
 
 if __name__ == '__main__':
     main()
+
+    from search.api_search_easypnr import get_airport_data_from_easypnr_api
+
+    get_airport_data_from_easypnr_api()

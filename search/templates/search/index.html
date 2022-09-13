@@ -84,7 +84,7 @@
 
                         <!--        Departure date            -->
                         <div class="mb-2">
-                            {{ form.search_type.errors }}
+                            {{ form.departure_date.errors }}
                             <label class="form-label">
                                 {{ form.departure_date.label }}
                             </label>
@@ -98,7 +98,7 @@
 
                         <!--        Return date            -->
                         <div class="mb-2">
-                            {{ form.search_type.errors }}
+                            {{ form.return_date.errors }}
                             <label class="form-label">
                                 {{ form.return_date.label }}
                             </label>
@@ -314,5 +314,89 @@
         });
     });
 </script>
+
+<script>
+    $('#id_search_type').on('change', function (e) {
+        var optionSelected = $("option:selected", this);
+        var valueSelected = this.value;
+        const trip_length_from = document.getElementById('id_nights_in_dst_from');
+        const trip_length_to = document.getElementById('id_nights_in_dst_to');
+        const flexible = document.getElementById('id_flexible');
+        const flight_type = document.getElementById('id_flight_type');
+
+
+        if (valueSelected === 'fixed') {
+            trip_length_from.disabled = true;
+            trip_length_to.disabled = true;
+            flexible.disabled = false;
+
+
+        } else {
+            flexible.disabled = true;
+
+            if (flight_type.value === 'oneway') {
+                trip_length_from.disabled = true;
+                trip_length_to.disabled = true;
+            } else {
+                trip_length_from.disabled = false;
+                trip_length_to.disabled = false;
+            }
+        }
+    });
+
+</script>
+
+<script>
+    $('#id_flight_type').on('change', function (e) {
+        var optionSelected = $("option:selected", this);
+        var valueSelected = this.value;
+        const trip_length_from = document.getElementById('id_nights_in_dst_from');
+        const trip_length_to = document.getElementById('id_nights_in_dst_to');
+        const return_date = document.getElementById('id_return_date');
+        const search_type = document.getElementById('id_return_date');
+
+
+        if (valueSelected === 'round') {
+            return_date.disabled = false;
+
+            if (search_type.value === 'fixed') {
+                trip_length_from.disabled = true;
+                trip_length_to.disabled = true;
+            } else {
+                trip_length_from.disabled = false;
+                trip_length_to.disabled = false;
+            }
+
+        } else {
+            trip_length_from.disabled = true;
+            trip_length_to.disabled = true;
+            return_date.disabled = true;
+        }
+    });
+
+</script>
+
+<script>
+    window.onload = function () {
+        var optionSelected = $("option:selected", this);
+        var valueSelected = this.value;
+        const trip_length_from = document.getElementById('id_nights_in_dst_from');
+        const trip_length_to = document.getElementById('id_nights_in_dst_to');
+        const return_date = document.getElementById('id_return_date');
+        const search_type = document.getElementById('id_search_type');
+        const flexible = document.getElementById('id_flexible');
+
+
+        return_date.disabled = valueSelected === 'oneway'
+            && search_type.value === 'fixed';
+        trip_length_from.disabled = search_type.value === 'fixed';
+        trip_length_to.disabled = search_type.value === 'fixed';
+        flexible.disabled = search_type.value === 'duration';
+
+
+    };
+
+</script>
+
 
 {% endblock %}

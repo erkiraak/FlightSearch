@@ -1,7 +1,9 @@
-from constants import CABINS, CURRENCIES, STOPOVERS, FLIGHT_TYPE, SEARCH_TYPE
 from datetime import datetime, timedelta
+
 from django.contrib.auth.models import User
 from django.db import models
+
+from constants import CABINS, CURRENCIES, STOPOVERS, FLIGHT_TYPE, SEARCH_TYPE
 
 
 class Airport(models.Model):
@@ -11,7 +13,7 @@ class Airport(models.Model):
     country = models.CharField(max_length=100)
 
     def __str__(self):
-        return self.name
+        return f'{self.city}({self.iata_code})'
 
 
 # TODO add airline API call
@@ -94,9 +96,19 @@ class Search(models.Model):
     )
     departure_date = models.DateField()
     return_date = models.DateField(blank=True, null=True)
-    flexible = models.BooleanField(default=False)
-    nights_in_dst_from = models.PositiveIntegerField(default=7)
-    nights_in_dst_to = models.PositiveIntegerField(default=14)
+    flexible = models.BooleanField(
+        default=False,
+        null=True,
+        blank=True
+    )
+    nights_in_dst_from = models.PositiveIntegerField(
+        default=7,
+        null=True,
+        blank=True)
+    nights_in_dst_to = models.PositiveIntegerField(
+        default=14,
+        null=True,
+        blank=True)
     max_fly_duration = models.PositiveIntegerField(
         blank=True,
         null=True,
@@ -118,7 +130,7 @@ class Search(models.Model):
         default=None,
         choices=STOPOVERS
     )
-    limit = models.IntegerField(default=1)
+    limit = models.IntegerField(default=10)
     locale = models.CharField(max_length=5, default='en')
 
     def __str__(self):
@@ -176,7 +188,7 @@ class Search(models.Model):
             curr=cleaned_data.get('curr'),
             price_from=cleaned_data.get('price_from'),
             price_to=cleaned_data.get('price_to'),
-            limit=cleaned_data.get('limit'),
+            # limit=cleaned_data.get('limit'),
         )
         search.save()
         return search

@@ -6,8 +6,17 @@
 <ul>
   {% for i in itineraries %}
     <li> From: {{i.fly_from.city}}</li>
-    <li> To: {{i.fly_to}}</li>
+    <li> To: {{i.fly_to.city}}</li>
     <li> Price: {{i.price}}</li>
+    <li> Price: {{i.departure_date}}</li>
+    <li> Price: {{i.departure_time}}</li>
+    <li> Price: {{i.departure_arrival_time}}</li>
+
+    <li> Price: {{i.return_date}}</li>
+    <li> Price: {{i.return_time}}</li>
+    <li> Price: {{i.return_arrival_time}}</li>
+
+
     <li></li>
   {% endfor %}
 </ul>
