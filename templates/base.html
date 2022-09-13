@@ -24,6 +24,10 @@
             rel="stylesheet"
             href="../static/style.css"
     >
+    <link
+            rel="stylesheet"
+            href="../../static/user_profile.css"
+    >
 
 
     <script
@@ -32,53 +36,74 @@
             crossorigin="anonymous"
     ></script>
     <script
-            src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js"
-            integrity="sha384-wHAiFfRlMFy6i5SRaxvfOCifBUQy1xHdJ/yoi7FRNXMRBu5WHdZYu1hA6ZOblgut"
-            crossorigin="anonymous"
-    ></script>
-    <script
-            src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js"
-            integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k"
+            src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-u1OknCvxWvY5kfmNBILK2hRnQC3Pr17a+RTT6rIHI7NnikvbZlHgTPOOmMi466C8"
             crossorigin="anonymous"
     ></script>
     <script src="https://code.jquery.com/jquery-3.6.0.js"></script>
     <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.js"></script>
-    <script src="./script.js"></script>
+    <script src="../static/script.js"></script>
 
 </head>
 
 <body>
+
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-    <div class="container fixed">
+    <div class="container fluid">
         <a class="navbar-brand" href="/">FlightSearch</a>
-
-
-
-        </div>
-
-
-
-        <ul class="nav navbar-nav navbar-right navbar-dark">
-            <a class="nav-item nav-link active" href="/profile">
-                Welcome, {{user.first_name.title|default:'Guest'}}
-            </a>
-            {% if user.is_authenticated %}
-
-
-                    <li><a href="{% url 'account_logout' %}?next={{ request.path }}">Logout</a></li>
-                {% else %}
-                    <li><a href="{% url 'account_login' %}">Login</a></li>
-                {% endif %}
-            </ul>
-
-            <li><a href="{% url 'account_logout' %}?next={{ request.path }}">Logout</a>
-            </li>
-            {% else %}
-            <li><a href="{% url 'account_login' %}">Login</a></li>
-            {% endif %}
-        </ul>
     </div>
 
+    <div class="collapse navbar-collapse" id="navbarNavDarkDropdown">
+        <ul class="navbar-nav">
+            <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="/"
+                   id="navbarDarkDropdownMenuLink" role="button"
+                   data-bs-toggle="dropdown" aria-expanded="false">
+                    Welcome, {{user.first_name.title|default:'Guest'}}
+                </a>
+                <ul class="dropdown-menu dropdown-menu-dark"
+                    aria-labelledby="navbarDarkDropdownMenuLink">
+
+                    {% if user.is_authenticated %}
+
+                    <li>
+                        <a class="dropdown-item" href="/profile">
+                            My profile
+                        </a>
+                    </li>
+                    <li>
+                        <a class="dropdown-item" href="/subscriptions">
+                            My subscriptions
+                        </a>
+                    </li>
+                    <li>
+                        <a class="dropdown-item" href="/searches">
+                            My search history
+                        </a>
+                    </li>
+
+                    <li>
+                        <a class="dropdown-item"
+                           href="{% url 'account_logout' %}?next={{ request.path }}">
+                            Logout
+                        </a>
+                    </li>
+
+                    {% else %}
+
+                    <li>
+                        <a class="dropdown-item"
+                           href="{% url 'account_login' %}">
+                            Login
+                        </a>
+                    </li>
+                    {% endif %}
+
+
+                </ul>
+            </li>
+        </ul>
+    </div>
 </nav>
 <nav>
     {% if messages %}
@@ -92,9 +117,11 @@
     {% endfor %}
     {% endif %}
 </nav>
+
 <div>
     {% block content %}
-        {% endblock %}
+    {% endblock %}
+
 </div>
 </body>
 
