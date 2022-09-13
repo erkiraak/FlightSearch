@@ -1,5 +1,3 @@
-from django.shortcuts import render
-
 import environ
 import smtplib
 
@@ -20,7 +18,7 @@ def send_email(subscription, result):
                      f"on sale for ${result.price}!"
     msg["From"] = email_address
     msg["To"] = subscription.email
-    print(msg)
+
     with smtplib.SMTP_SSL("smtp.gmail.com", 465) as smtp:
         smtp.login(email_address, email_password)
         smtp.send_message(msg)

@@ -2,174 +2,401 @@
 {% block content %}
 {% load static %}
 
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>FlighSearch</title>
-    <link
-      href="https://fonts.googleapis.com/css?family=Lato:400,700"
-      rel="stylesheet"
-    />
-    <link
-      rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.14.0/css/all.min.css"
-    />
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-    <link rel="stylesheet" href="../../../static/search.css">
-    <script src="../../../static/script.js"></script>
-  </head>
-  <body>
-    <main>
-      <div id="background-wrap">
-        <div class="x1">
-          <div class="cloud"></div>
-        </div>
+<form class="form-wrapper" action="/" enctype="multipart/form-data"
+      method="post">
+    {% csrf_token %}
+    {{error}}
 
-        <div class="x2">
-          <div class="cloud"></div>
-        </div>
 
-        <div class="x3">
-          <div class="cloud"></div>
-        </div>
+    <!--        Locations            -->
 
-        <div class="x4">
-          <div class="cloud"></div>
-        </div>
+    <div class="container-sm">
+        <div class="my-2 card">
+            <div class="card-body">
+                <h5 class="card-title">Locations</h5>
 
-        <div class="x5">
-          <div class="cloud"></div>
-        </div>
-      </div>
-      <section id="booking">
-        <article id="cta">
-          <header>
-            <h1>FlightSearch</h1>
-            <br />
-            <p>
-              Try Erki's and Kalvi's super cool search for cheap flight tickets.
-            </p>
-          </header>
-        </article>
+                <div class="row">
 
-        <article id="formSection">
-          <form action="#" id="flightBook">
-            <div id="tripType" class="form-group">
-              <label for="roundTrip">
-                <input type="radio" id="roundTrip" name="flight-type" />
-                <!-- span tag to make the buttons customize  -->
-                <span></span>Roundtrip
-              </label>
-              <label for="oneWay">
-                <input type="radio" id="oneWay" name="flight-type" />
-                <span></span>One way
-              </label>
-            </div>
+                    <!--        ORIGIN            -->
+                    <div class="col-sm fieldWrapper mb-2">
+                        <label class="form-label">
+                            {{ form.fly_from.label }}
+                        </label>
+                        <div class="input-group">
+                                <span class="input-group-text"
+                                ><i class="bi-pin-map"></i>
+                                </span>
+                            {{ form.fly_from }}
+                            {{ form.fly_from.errors }}
 
-            <div id="placeDate">
-              <div class="form-group">
-                <label class="form-label" for="flyingFrom">From</label>
-                <input
-                  class="form-control"
-                  id="flyingFrom"
-                  type="text"
-                  placeholder="City or airport"
-                />
-              </div>
+                        </div>
+                    </div>
 
-              <div class="form-group">
-                <label class="form-label" for="flyingTo">To</label>
-                <input
-                  class="form-control"
-                  id="flyingTo"
-                  type="text"
-                  placeholder="City or airport"
-                />
-              </div>
 
-              <div class="form-group">
-                <label class="form-label" for="departing">Departing date</label>
-                <input
-                  class="form-control"
-                  id="departing"
-                  type="date"
-                  required
-                />
-                <i class="fas fa-calendar-alt"></i>
-              </div>
+                    <!--        DESTINATION            -->
+                    <div class="col-sm fieldWrapper mb-2">
+                        <label class="form-label">
+                            {{ form.fly_to.label }}
+                        </label>
+                        <div class="input-group">
+                                <span class="input-group-text"
+                                ><i class="bi-pin-map-fill"></i>
+                                </span>
+                            {{ form.fly_to }}
+                            {{ form.fly_to.errors }}
+                        </div>
+                    </div>
 
-              <div class="form-group">
-                <label class="form-label" for="returning">Returning date</label>
-                <input
-                  class="form-control"
-                  id="returning"
-                  type="date"
-                  required
-                />
-                <i class="fas fa-calendar-alt"></i>
-              </div>
-            </div>
-            <!-- end details -->
-
-            <h3>Passengers</h3>
-            <div id="details">
-              <!--passengers -->
-              <div class="form-group selectNum">
-                <label class="stepper-label" for="numOfAdults"
-                  >Adults (18+)</label
-                >
-                <div class="stepper">
-                  <button class="minus"><i class="fas fa-minus"></i></button>
-                  <input
-                    class="stepper-control"
-                    id="numOfAdults"
-                    type="number"
-                    value="0"
-                  />
-                  <button class="plus"><i class="fas fa-plus"></i></button>
                 </div>
-              </div>
+            </div>
+        </div>
 
-              <div class="form-group selectNum">
-                <label class="stepper-label" for="numOfKids"
-                  >Children (0-17)</label
-                >
-                <div class="stepper">
-                  <button class="minus" id="minus">
-                    <i class="fas fa-minus"></i>
-                  </button>
-                  <input
-                    class="stepper-control"
-                    id="numOfKids"
-                    type="number"
-                    value="0"
-                    max="10"
-                  />
-                  <button class="plus"><i class="fas fa-plus"></i></button>
+        <div class="row">
+
+            <!--        Dates            -->
+            <div class="mb-2 col">
+                <div class="h-100 card">
+                    <div class="card-body">
+                        <h5 class="card-title">Dates</h5>
+
+                        <div class="row">
+
+                            <!--        Search type            -->
+                            <div class="col-sm fieldWrapper mb-2">
+                                {{ form.search_type.errors }}
+                                <label class="form-label">
+                                    {{ form.search_type.label }}
+                                </label>
+                                {{ form.search_type }}
+                            </div>
+
+                            <!--        Flight type            -->
+                            <div class="col-sm fieldWrapper mb-2">
+                                {{ form.flight_type.errors }}
+                                <label class="form-label">
+                                    {{ form.flight_type.label }}
+                                </label>
+                                {{ form.flight_type }}
+                            </div>
+
+                        </div>
+
+                        <!--        Departure date            -->
+                        <div class="mb-2">
+                            {{ form.departure_date.errors }}
+                            <label class="form-label">
+                                {{ form.departure_date.label }}
+                            </label>
+                            <div class="input-group">
+                                <span class="input-group-text"
+                                ><i class="bi-calendar"></i>
+                                </span>
+                                {{ form.departure_date }}
+                            </div>
+                        </div>
+
+                        <!--        Return date            -->
+                        <div class="mb-2">
+                            {{ form.return_date.errors }}
+                            <label class="form-label">
+                                {{ form.return_date.label }}
+                            </label>
+                            <div class="input-group">
+                                <span class="input-group-text"
+                                ><i class="bi-calendar-fill"></i>
+                                </span>
+                                {{ form.return_date }}
+                            </div>
+                        </div>
+
+                        <!--        Flexible            -->
+                        <div class="d-flex align-items-end">
+                            <div class="mb-2">
+                                {{ form.search_type.errors }}
+
+
+                                <label class="form-label">
+                                    {{ form.flexible.label }}
+                                </label>
+                                {{ form.flexible }}
+
+                            </div>
+                        </div>
+
+                        <!--        Nights in destination            -->
+                        <div>
+                            {{ form.nights_in_dst_from.errors }}
+                            {{ form.nights_in_dst_to.errors }}
+                            <label class="form-label">
+                                Trip length
+                            </label>
+                            <div class="input-group mb-2">
+                                <label class="input-group-text">
+                                    {{ form.nights_in_dst_from.label }}
+                                </label>
+                                {{ form.nights_in_dst_from }}
+
+                                <label class="input-group-text">
+                                    {{ form.nights_in_dst_to.label }}
+                                </label>
+                                {{ form.nights_in_dst_to }}
+
+                                <div class="input-group-append">
+                                    <span class="input-group-text">nights</span>
+                                </div>
+
+                            </div>
+                        </div>
+
+                    </div>
                 </div>
-              </div>
-
-              <div class="form-group travelClass">
-                <label class="form-label" for="travClass">Travel class</label>
-                <select class="form-control" id="travClass">
-                  <option>Economy class</option>
-                  <option>Business class</option>
-                  <option>First class</option>
-                </select>
-                <i class="fa fa-arrow-down select-arrow" aria-hidden="true"></i>
-              </div>
             </div>
 
-            <div class="form-btn">
-              <button class="submit-btn">Show flights</button>
+            <!--        DETAILS            -->
+
+            <div class="mb-2 col">
+                <div class="h-100 card">
+                    <div class="card-body">
+                        <h5 class="card-title">Details</h5>
+
+                        <div class="mb-2">
+
+                            {{ form.selected_cabins.errors }}
+
+                            <label class="form-label">
+                                {{ form.selected_cabins.label }}
+                            </label>
+
+                            {{ form.selected_cabins }}
+                        </div>
+
+                        <label class="form-label">Passengers</label>
+
+                        <div class="mb-2">
+                            <div class="input-group">
+                                {{ form.adults.errors }}
+
+                                <label class="input-group-text w-25">
+                                    {{ form.adults.label }}
+                                </label>
+
+                                {{ form.adults }}
+                            </div>
+                            <span id="adults-label" class="form-text"
+                            >12 years old and older</span
+                            >
+                        </div>
+
+                        <div class="mb-2">
+                            <div class="input-group">
+                                {{ form.children.errors }}
+
+                                <label class="input-group-text w-25">
+                                    {{ form.children.label }}
+                                </label>
+
+                                {{ form.children }}
+                            </div>
+                            <span id="children-label" class="form-text"
+                            >2 to 12 years old</span
+                            >
+                        </div>
+                        <div class="mb-2">
+                            <div class="input-group">
+                                {{ form.infants.errors }}
+
+                                <label class="input-group-text w-25">
+                                    {{ form.infants.label }}
+                                </label>
+
+                                {{ form.infants }}
+                            </div>
+                            <span id="infants-label" class="form-text"
+                            >Up to 2 years old</span
+                            >
+                        </div>
+                    </div>
+                </div>
             </div>
-          </form>
-        </article>
-      </section>
-    </main>
-  </body>
+
+
+        </div>
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">Filters</h5>
+                <div class="row">
+
+                    <!--        Max fly duration            -->
+                    <div class="col-sm fieldWrapper mb-2">
+                        {{ form.max_fly_duration.errors }}
+                        <label class="form-label">
+                            {{ form.max_fly_duration.label }}
+                        </label>
+                        <div class="input-group">
+                            {{ form.max_fly_duration }}
+                            <div class="input-group-append">
+                                <span class="input-group-text">hours</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!--        Max connections            -->
+                    <div class="col-sm fieldWrapper mb-2">
+                        {{ form.max_stopovers.errors }}
+                        <label class="form-label">
+                            {{ form.max_stopovers.label }}
+                        </label>
+                        <div class="input-group">
+                            {{ form.max_stopovers }}
+                            <div class="input-group-append">
+                                <span class="input-group-text">stops</span>
+                            </div>
+                        </div>
+                        <span id="connections-label" class="form-text"
+                        >0 for direct only</span
+                        >
+                    </div>
+
+                    <!--        Price            -->
+                    <div class="col-md-5 fieldWrapper mb-2">
+
+                        <label class="form-label">
+                            Price
+                        </label>
+                        <div class="input-group mb-2">
+                            <label class="input-group-text">
+                                {{ form.price_from.label }}
+                            </label>
+                            {{ form.price_from }}
+
+                            <label class="input-group-text">
+                                {{ form.price_to.label }}
+                            </label>
+                            {{ form.price_to }}
+                        </div>
+
+                    </div>
+
+                    <div class="col-md-2 fieldWrapper mb-2">
+                        {{ form.curr.errors }}
+                        <label class="form-label">
+                            {{ form.curr.label }}
+                        </label>
+                        <div class="input-group">
+                            {{ form.curr }}
+                        </div>
+                    </div>
+
+                </div>
+
+
+            </div>
+        </div>
+        <div class="d-grid gap-2 col-12 mx-auto">
+
+            <button type="submit" id="search-button"
+                    class="w-100 btn btn-primary">
+                <p class="h5">Search</p>
+
+            </button>
+        </div>
+
+
+        <script src="./script.js"></script>
+</form>
+
+<script>
+    $(function () {
+        $("#id_fly_from, #id_fly_to").autocomplete({
+            source: "{% url 'index' %}",
+            minLength: 2
+        });
+    });
+</script>
+
+<script>
+    $('#id_search_type').on('change', function (e) {
+        var optionSelected = $("option:selected", this);
+        var valueSelected = this.value;
+        const trip_length_from = document.getElementById('id_nights_in_dst_from');
+        const trip_length_to = document.getElementById('id_nights_in_dst_to');
+        const flexible = document.getElementById('id_flexible');
+        const flight_type = document.getElementById('id_flight_type');
+
+
+        if (valueSelected === 'fixed') {
+            trip_length_from.disabled = true;
+            trip_length_to.disabled = true;
+            flexible.disabled = false;
+
+
+        } else {
+            flexible.disabled = true;
+
+            if (flight_type.value === 'oneway') {
+                trip_length_from.disabled = true;
+                trip_length_to.disabled = true;
+            } else {
+                trip_length_from.disabled = false;
+                trip_length_to.disabled = false;
+            }
+        }
+    });
+
+</script>
+
+<script>
+    $('#id_flight_type').on('change', function (e) {
+        var optionSelected = $("option:selected", this);
+        var valueSelected = this.value;
+        const trip_length_from = document.getElementById('id_nights_in_dst_from');
+        const trip_length_to = document.getElementById('id_nights_in_dst_to');
+        const return_date = document.getElementById('id_return_date');
+        const search_type = document.getElementById('id_return_date');
+
+
+        if (valueSelected === 'round') {
+            return_date.disabled = false;
+
+            if (search_type.value === 'fixed') {
+                trip_length_from.disabled = true;
+                trip_length_to.disabled = true;
+            } else {
+                trip_length_from.disabled = false;
+                trip_length_to.disabled = false;
+            }
+
+        } else {
+            trip_length_from.disabled = true;
+            trip_length_to.disabled = true;
+            return_date.disabled = true;
+        }
+    });
+
+</script>
+
+<script>
+    window.onload = function () {
+        var optionSelected = $("option:selected", this);
+        var valueSelected = this.value;
+        const trip_length_from = document.getElementById('id_nights_in_dst_from');
+        const trip_length_to = document.getElementById('id_nights_in_dst_to');
+        const return_date = document.getElementById('id_return_date');
+        const search_type = document.getElementById('id_search_type');
+        const flexible = document.getElementById('id_flexible');
+
+
+        return_date.disabled = valueSelected === 'oneway'
+            && search_type.value === 'fixed';
+        trip_length_from.disabled = search_type.value === 'fixed';
+        trip_length_to.disabled = search_type.value === 'fixed';
+        flexible.disabled = search_type.value === 'duration';
+
+
+    };
+
+</script>
+
+
 {% endblock %}
-</html>

@@ -6,19 +6,44 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>FlightSearch</title>
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css"
-          integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
+    <link
+            rel="stylesheet"
+            href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/css/bootstrap.min.css"
+            integrity="sha384-KyZXEAg3QhqLMpG8r+8fhAXLRk2vvoC2f3B09zVXn8CA5QIVfZOJ3BCsw2P0p/We"
+            crossorigin="anonymous"
+    />
+    <link
+            rel="stylesheet"
+            href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css"
+    />
+    <link
+            rel="stylesheet"
+            href="//code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css"
+    />
+    <link
+            rel="stylesheet"
+            href="../static/style.css"
+    >
 
-    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+
+    <script
+            src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
             integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
-            crossorigin="anonymous"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js"
+            crossorigin="anonymous"
+    ></script>
+    <script
+            src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js"
             integrity="sha384-wHAiFfRlMFy6i5SRaxvfOCifBUQy1xHdJ/yoi7FRNXMRBu5WHdZYu1hA6ZOblgut"
-            crossorigin="anonymous"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js"
+            crossorigin="anonymous"
+    ></script>
+    <script
+            src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js"
             integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k"
-            crossorigin="anonymous"></script>
-    <link rel="stylesheet" href="../static/style.css">
+            crossorigin="anonymous"
+    ></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.js"></script>
+    <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.js"></script>
+    <script src="./script.js"></script>
 
 </head>
 
@@ -32,29 +57,40 @@
         </div>
 
 
+
         <ul class="nav navbar-nav navbar-right navbar-dark">
-             <a class="nav-item nav-link active" href="/profile">
-                    Welcome, {{user.first_name.title|default:'Guest'}}
-             </a>
-                {% if user.is_authenticated %}
+            <a class="nav-item nav-link active" href="/profile">
+                Welcome, {{user.first_name.title|default:'Guest'}}
+            </a>
+            {% if user.is_authenticated %}
+
 
                     <li><a href="{% url 'account_logout' %}?next={{ request.path }}">Logout</a></li>
                 {% else %}
                     <li><a href="{% url 'account_login' %}">Login</a></li>
                 {% endif %}
             </ul>
+
+            <li><a href="{% url 'account_logout' %}?next={{ request.path }}">Logout</a>
+            </li>
+            {% else %}
+            <li><a href="{% url 'account_login' %}">Login</a></li>
+            {% endif %}
+        </ul>
+    </div>
+
 </nav>
 <nav>
-{% if messages %}
-  {% for message in messages %}
+    {% if messages %}
+    {% for message in messages %}
     <div class="alert alert-dismissible alert-success">
-      <button type="button" class="close" data-dismiss="alert">
-      ×
-      </button>
-      <strong>{{message}}</strong>
+        <button type="button" class="close" data-dismiss="alert">
+            ×
+        </button>
+        <strong>{{message}}</strong>
     </div>
- {% endfor %}
-{% endif %}
+    {% endfor %}
+    {% endif %}
 </nav>
 <div>
     {% block content %}
