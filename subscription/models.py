@@ -1,8 +1,6 @@
 from constants import CURRENCIES
-
 from django.contrib.auth.models import User
 from django.db import models
-
 from search.models import Search
 
 

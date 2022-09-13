@@ -2,20 +2,17 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.urls import reverse_lazy
 from django.views.generic import (ListView, CreateView, DetailView,
                                   UpdateView, DeleteView)
-
-# from .forms import SubscriptionForm
 from .models import Subscription
 from search.models import Search
 
 
 # TODO OPTIONAL change CreateSubscription type to avoid POST issues
-# TODO OPTIONAL add subscription number limit
-
 class CreateSubscription(LoginRequiredMixin, CreateView):
     template_name = 'create_subscription.html'
     model = Subscription
     success_url = reverse_lazy('list_subscription')
     fields = ('price_to', 'curr', 'email')
+    object = None
 
     def get_form(self, form_class=None):
         form = super(CreateSubscription, self).get_form(form_class)
@@ -58,6 +55,7 @@ class UpdateSubscription(LoginRequiredMixin, UpdateView):
     model = Subscription
     success_url = reverse_lazy('list_subscription')
     fields = ('price_to', 'curr', 'email')
+    object = None
 
     def form_valid(self, form):
         self.object = form.save(commit=False)

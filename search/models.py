@@ -1,24 +1,7 @@
-from constants import (CABINS, CURRENCIES, STOPOVERS,
-                       FLIGHT_TYPE, SEARCH_TYPE)
+from constants import CABINS, CURRENCIES, STOPOVERS, FLIGHT_TYPE, SEARCH_TYPE
 from datetime import datetime, timedelta
-
 from django.contrib.auth.models import User
 from django.db import models
-
-import environ
-
-
-class AirportField(models.ForeignKey):
-    # def __init__(self, *args, **kwargs):
-    #     super().__init__(*args, **kwargs)
-
-    def to_python(self, value):
-        if not isinstance(value, Airport):
-            airport = Airport.objects.get(city=value)
-        else:
-            airport = value
-
-        return airport
 
 
 class Airport(models.Model):
@@ -95,8 +78,6 @@ class Search(models.Model):
         default='round',
         choices=FLIGHT_TYPE
     )
-    # fly_from = models.CharField(max_length=100)
-    # fly_to = models.CharField(max_length=100)
     fly_from = models.ForeignKey(
         Airport,
         on_delete=models.CASCADE,
@@ -153,12 +134,10 @@ class Search(models.Model):
         super().save(*args, **kwargs)
 
     def delete_search(self, nr_remaining):
-        # get all primary keys for searches older than latest x objects
         pk = Search.objects.filter(user=self.user
                                    ).order_by('-id'
                                               ).values('pk')[nr_remaining:]
 
-        # delete Search objects in list skipping protected ones
         for key in pk:
             try:
                 Search.objects.get(pk=key['pk']).delete()
@@ -169,8 +148,8 @@ class Search(models.Model):
     def create_search_object_from_request(cls, cleaned_data, user):
         """
         Creates a search object from cleaned data
-        :param user:
-        :param cleaned_data:
+        :param user: User object
+        :param cleaned_data: dictionary with cleaned data
         :return: Search object
         """
 
@@ -197,7 +176,7 @@ class Search(models.Model):
             curr=cleaned_data.get('curr'),
             price_from=cleaned_data.get('price_from'),
             price_to=cleaned_data.get('price_to'),
-            # limit=parameters.get('limit'),
+            limit=cleaned_data.get('limit'),
         )
         search.save()
         return search
@@ -244,7 +223,7 @@ class Result(models.Model):
         """
         Creates Response objects from JSON containing an individual itinerary
         from KIWI API flight search results
-        :param search_id:
+        :param search_id: PK of used Search object
         :param api_response: JSON containing flight search results
         :return: Result object
         """

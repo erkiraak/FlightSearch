@@ -1,13 +1,8 @@
-import requests
 import environ
+import requests
 
 from django.http import HttpResponse
-
 from .models import Airport
-
-env = environ.Env(
-    DEBUG=(bool, False)
-)
 
 
 def get_airport_data_from_easypnr_api():
@@ -16,8 +11,9 @@ def get_airport_data_from_easypnr_api():
     all countries, cities and airports
     """
     api_endpoint = 'http://api.easypnr.com/v4/airports'
-    api_key = env('EASYPNR_API_KEY')
+    api_key = environ.Env(DEBUG=(bool, False))('EASYPNR_API_KEY')
     headers = {'X-Api-Key': api_key}
+    errors = ""
 
     if not Airport.objects.all():
         response = requests.get(
@@ -31,14 +27,13 @@ def get_airport_data_from_easypnr_api():
             try:
                 Airport.objects.create(
                     iata_code=airport['iataCode'],
-                    name=airport['locationName'],
-                    city=airport['location'],
-                    country=airport['country']
+                    name=airport.get('locationName'),
+                    city=airport.get('location'),
+                    country=airport.get('country')
                 )
             except Exception as ex:
-                print(ex)
+                errors += f"{ex}\n"
 
-    else:
-        message = 'Airport data already exists'
+        return HttpResponse(f"Airport data added. \nErrors: \n{errors} ")
 
-    return HttpResponse(message)
+    return HttpResponse('Airport data already exists')

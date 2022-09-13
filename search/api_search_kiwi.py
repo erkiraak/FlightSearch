@@ -1,5 +1,5 @@
-import requests
 import environ
+import requests
 
 from datetime import timedelta
 from .models import Search
@@ -11,10 +11,9 @@ def create_query_for_kiwi_api(search: Search) -> dict:
     :param search: Search object
     :return: dictionary containing search parameters
     """
+    flexible = 0
     if search.flexible:
         flexible = 3
-    else:
-        flexible = 0
 
     query = {
         'fly_from': search.fly_from.iata_code,
@@ -74,7 +73,6 @@ def search_from_kiwi_api(search: Search) -> dict or None:
     """
 
     endpoint_search = "https://tequila-api.kiwi.com/v2/search"
-    # endpoint_city_search = "https://tequila-api.kiwi.com/locations/query"
 
     headers = {
         "accept": "application/json",
@@ -89,8 +87,7 @@ def search_from_kiwi_api(search: Search) -> dict or None:
             params=query
         )
         api_response.raise_for_status()
+        return api_response.json()
 
     except requests.exceptions.HTTPError:
         return None
-
-    return api_response.json()
