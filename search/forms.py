@@ -1,7 +1,7 @@
 import datetime
 from django import forms
 from django.core.exceptions import ValidationError
-from search.models import Search, Airport
+from search.models import Search
 
 
 class DateInput(forms.DateInput):

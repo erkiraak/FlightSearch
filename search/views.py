@@ -1,4 +1,3 @@
-from .api_search_easypnr import get_airport_data_from_easypnr_api
 from .api_search_kiwi import search_from_kiwi_api
 from django.db.models import ObjectDoesNotExist, Q
 from django.http import JsonResponse
@@ -16,20 +15,22 @@ def get_airport(search):
     except (ObjectDoesNotExist, IndexError):
         airport = None
 
-    finally:
-        return airport
+    return airport
+
 
 def search_view(request):
-    # Check if airport data is in the database.
-    # If not, make api call and add to database
-    get_airport_data_from_easypnr_api()
+    form = SearchForm(None)
+    template = 'search/index.html'
+    context = {
+        'form': form,
+    }
 
     if 'term' in request.GET:
 
         qs = Airport.objects.filter(
             name__icontains=request.GET.get('term'))[:10]
 
-        names = list()
+        names = []
 
         for airport in qs:
             names.append(f'{airport.city}({airport.iata_code})')
@@ -39,17 +40,15 @@ def search_view(request):
 
         if request.POST['fly_from'] \
                 and not isinstance(request.POST['fly_from'], Airport):
-            temp_dict = request.POST.copy()
+            post_copy = request.POST.copy()
+            post_copy['fly_from'] = get_airport(post_copy['fly_from'])
+            post_copy['fly_to'] = get_airport(post_copy['fly_to'])
+            form = SearchForm(post_copy)
 
-            temp_dict['fly_from'] = get_airport(temp_dict['fly_from'])
-            temp_dict['fly_to'] = get_airport(temp_dict['fly_to'])
-
-            request.POST = temp_dict
-
-        form = SearchForm(request.POST)
+        else:
+            form = SearchForm(request.POST)
 
         if form.is_valid():
-
             search = Search.create_search_object_from_request(
                 cleaned_data=form.cleaned_data,
                 user=request.user
@@ -57,23 +56,12 @@ def search_view(request):
 
             api_response = search_from_kiwi_api(search)
 
-            # if API call returns an error
             if api_response is None:
-                context = {
-                    'form': form,
-                    'error': 'No results found, invalid destinations',
-                }
-                template = 'search/index.html'
+                context['error'] = 'No results found, invalid destinations'
 
-            # if api call returns a response but no results
             elif len(api_response['data']) == 0:
-                context = {
-                    'form': form,
-                    'error': 'No flights found, please check info entered'
-                }
-                template = 'search/index.html'
+                context['error'] = 'No results found, invalid destinations'
 
-            # if api call returns results
             else:
                 results = [
                     Result.create_result_object_from_kiwi_response(
@@ -89,17 +77,5 @@ def search_view(request):
                 }
 
                 template = 'search/list_results.html'
-        else:
-            template = 'search/index.html'
-            context = {
-                'form': form,
-                # 'error': 'Search not valid'
-            }
-    else:
-        form = SearchForm(None)
-        template = 'search/index.html'
-        context = {
-            'form': form,
-        }
 
     return render(request=request, template_name=template, context=context)

@@ -17,7 +17,6 @@ from django.contrib import admin
 from django.urls import path, include
 from search.views import search_view
 from users.views import profile
-from viewer.views import logged_in_view
 from subscription.views import (CreateSubscription,
                                 ViewSubscription,
                                 ListSubscription,
@@ -29,7 +28,6 @@ from subscription.views import (CreateSubscription,
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('accounts/', include('allauth.urls')),
-    path('logged_in/', logged_in_view),
     path('', search_view, name='index'),
     path('subscribe/<int:pk>', CreateSubscription.as_view(), name='create_subscription'),
     path('subscription/<int:pk>', ViewSubscription.as_view(), name='view_subscription'),

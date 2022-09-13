@@ -179,7 +179,7 @@ SOCIALACCOUNT_PROVIDERS = {
 }
 
 
-
+# TODO clean
 """
 Before adding jobs to crontab change the log file location or disable logging
 by removing the last argument.
@@ -189,6 +189,7 @@ Commands:
     python3 manage.py crontab show  - view all jobs in crontab
     python3 manage.py crontab remove  - remove all jobs from crontab
 """
+
 CRONJOBS = [
     # runs every 5 minutes
     # (
@@ -208,7 +209,7 @@ CRONJOBS = [
     (
         '0 3 * * *',
         'search.cron.cron_job_delete_search_objects_without_user',
-        '>> /home/erki/Documents/IT/PycharmProjects/FlightSearch/cron_job.log'
+        '>> /home/erki/Documents/IT/PycharmProjects/FlightSearch/cron_job.log 2>&1'
     ),
 
 ]
