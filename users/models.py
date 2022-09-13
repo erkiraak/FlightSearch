@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
+from subscription.models import Subscription
 
 
 class Profile(models.Model):
@@ -14,6 +15,7 @@ class Profile(models.Model):
         upload_to='profile_images'
     )
     bio = models.TextField()
+    subscription = models.ManyToManyField(Subscription, blank=True)
 
     def __str__(self):
         return self.user.username

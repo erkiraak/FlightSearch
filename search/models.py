@@ -15,7 +15,6 @@ class Airport(models.Model):
     def __str__(self):
         return f'{self.city}({self.iata_code})'
 
-
 # TODO add airline API call
 class Airline(models.Model):
     name = models.CharField(max_length=50, null=True, blank=True)
