@@ -36,10 +36,6 @@ def create_query_for_kiwi_api(search: Search) -> dict:
         'limit': search.limit
     }
 
-    if search.search_type == "duration":
-        query['nights_in_dst_from'] = search.nights_in_dst_from
-        query['nights_in_dst_to'] = search.nights_in_dst_to
-
     if search.flight_type == "round":
         query['return_from'] = (
                 search.return_date - timedelta(days=flexible)
@@ -48,6 +44,19 @@ def create_query_for_kiwi_api(search: Search) -> dict:
         query['return_to'] = (
                 search.return_date + timedelta(days=flexible)
         ).strftime("%d/%m/%Y")
+
+    if search.search_type == "duration" and search.flight_type == "round":
+        query['date_to'] = (
+                search.return_date
+                - timedelta(days=search.nights_in_dst_from)
+        ).strftime("%d/%m/%Y")
+        query['return_from'] = (
+                search.departure_date
+                + timedelta(days=search.nights_in_dst_from)
+        ).strftime("%d/%m/%Y")
+        query['nights_in_dst_from'] = search.nights_in_dst_from
+        query['nights_in_dst_to'] = search.nights_in_dst_to
+
 
     if not search.max_fly_duration != '':
         query['max_fly_duration'] = search.max_fly_duration

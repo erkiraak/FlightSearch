@@ -71,7 +71,7 @@ FLIGHT_TYPE = [
 ]
 
 SEARCH_TYPE = [
-    ('fixed', 'By dates'),
-    ('duration', 'By duration'),
+    ('fixed', 'Fixed dates'),
+    ('duration', 'Cheapests flights between dates '),
 ]
 

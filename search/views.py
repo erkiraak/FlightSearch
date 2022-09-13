@@ -1,17 +1,22 @@
-from .api_search_kiwi import search_from_kiwi_api
 from django.db.models import ObjectDoesNotExist, Q
 from django.http import JsonResponse
 from django.shortcuts import render
+
+from .api_search_kiwi import search_from_kiwi_api
 from .forms import SearchForm
 from .models import Search, Result, Airport
 
 
 def get_airport(search):
     try:
-        iata = search[-4:-1]
-        city = search[:-5]
+            iata = search[-4:-1]
+            city = search[:-5]
 
-        airport = Airport.objects.get(Q(iata_code=iata), Q(city=city))
+            airport = Airport.objects.get(
+                (Q(iata_code=iata) &
+                 Q(city=city)) |
+                Q(iata_code=search.upper())
+            )
     except (ObjectDoesNotExist, IndexError):
         airport = None
 
@@ -77,5 +82,8 @@ def search_view(request):
                 }
 
                 template = 'search/list_results.html'
+        else:
+            # form = SearchForm(request.POST)
+            context['form'] = form
 
     return render(request=request, template_name=template, context=context)
