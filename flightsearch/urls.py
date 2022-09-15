@@ -16,7 +16,7 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 from search.views import search_view
-from users.views import profile
+from users.views import profile, edit_profile, delete_profile
 from subscription.views import (CreateSubscription,
                                 ViewSubscription,
                                 ListSubscription,
@@ -24,16 +24,30 @@ from subscription.views import (CreateSubscription,
                                 DeleteSubscription,
                                 DeleteAllSubscription
                                 )
+from django.conf import settings
+from django.conf.urls.static import static
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
-    path('accounts/', include('allauth.urls')),
-    path('', search_view, name='index'),
-    path('subscribe/<int:pk>', CreateSubscription.as_view(), name='create_subscription'),
-    path('subscription/<int:pk>', ViewSubscription.as_view(), name='view_subscription'),
-    path('subscription/<int:pk>/edit', UpdateSubscription.as_view(), name='update_subscription'),
-    path('subscription/<int:pk>/delete', DeleteSubscription.as_view(), name='delete_subscription'),
-    path('subscriptions/delete', DeleteAllSubscription.as_view(), name='delete_all_subscription'),
-    path('subscriptions', ListSubscription.as_view(), name='list_subscription'),
-    path('profile/', profile, name='users-profile'),
-]
+                  path('admin/', admin.site.urls),
+                  path('accounts/', include('allauth.urls')),
+                  path('', search_view, name='index'),
+                  path('subscribe/<int:pk>', CreateSubscription.as_view(),
+                       name='create_subscription'),
+                  path('subscription/<int:pk>', ViewSubscription.as_view(),
+                       name='view_subscription'),
+                  path('subscription/<int:pk>/edit',
+                       UpdateSubscription.as_view(),
+                       name='update_subscription'),
+                  path('subscription/<int:pk>/delete',
+                       DeleteSubscription.as_view(),
+                       name='delete_subscription'),
+                  path('subscriptions/delete', DeleteAllSubscription.as_view(),
+                       name='delete_all_subscription'),
+                  path('subscriptions', ListSubscription.as_view(),
+                       name='list_subscription'),
+                  path('profile/', profile, name='users-profile'),
+                  path('edit_profile/', edit_profile,
+                       name='users-edit_profile'),
+                  path('delete_account/', delete_profile,
+                       name='users-delete_account'),
+              ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

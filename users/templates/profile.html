@@ -6,6 +6,7 @@
   <title>Profile</title>
   <meta charset="utf-8">
   <link rel="stylesheet" type="text/css">
+  <link rel="stylesheet" href="../../static/user_profile.css">
 </head>
 
 
@@ -13,7 +14,7 @@
     <div class="header">
       <div class="cover">
         <div class="user-profile-avatar">
-          <img src="http://www.coopernortetelecom.com.br/assets/images/author-1.png" alt="img-avatar">
+          <img src=" {{ user.profile.avatar.url }} " alt="img-avatar"/>
         </div>
       </div>
     </div>
@@ -28,10 +29,7 @@
           <li>Surname: {{user.last_name.title}}</li>
           <li> email: {{user.email}}</li>
           <li>Bio: {{user.profile.bio}}</li>
-          <li>Avatar: {{user.profile.avatar}}</li>
-          <li>Subscriptions:
-                {{s.search.fly_from}} - {{s.search.fly_to}}
-          </li>
+
 
           {% else %}
           {% endif %}
@@ -39,8 +37,8 @@
       </div>
       <div class="d-grid gap-2 d-md-block">
         <br><a type="button" class="btn btn-outline-dark"
-               class="btn btn-primary" href="#" role="button">Edit profile</a>
-        <a type="button" class="btn btn-outline-danger" class="btn btn-primary" href="#" role="button">Remove profile</a>
+               class="btn btn-primary" href="{% url 'users-edit_profile' %}" role="button">Edit profile</a>
+        <a type="button" class="btn btn-outline-danger" class="btn btn-primary" href="{% url 'users-delete_account'%}" role="button">Remove profile</a>
       </div>
     </div>
   </section>
