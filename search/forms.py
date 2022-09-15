@@ -143,13 +143,16 @@ class SearchForm(forms.ModelForm):
             return departure_date
 
     def clean_return_date(self):
-        departure_date = self.cleaned_data.get('departure_date')
-        return_date = self.cleaned_data.get('return_date')
-        today = datetime.datetime.now().date()
-        if today > return_date:
-            raise ValidationError("Return date cannot be in the past")
+        if self.cleaned_data.get('flight_type') == 'round':
+            departure_date = self.cleaned_data.get('departure_date')
+            return_date = self.cleaned_data.get('return_date')
+            today = datetime.datetime.now().date()
+            if today > return_date:
+                raise ValidationError("Return date cannot be in the past")
 
-        if departure_date and departure_date > return_date:
-            raise ValidationError("Return date cannot be before departure date")
-        else:
-            return return_date
+            if departure_date and departure_date > return_date:
+                raise ValidationError("Return date cannot be before departure date")
+            else:
+                return return_date
+
+        return None

@@ -9,14 +9,14 @@ from .models import Search, Result, Airport
 
 def get_airport(search):
     try:
-            iata = search[-4:-1]
-            city = search[:-5]
+        iata = search[-4:-1]
+        city = search[:-5]
 
-            airport = Airport.objects.get(
-                (Q(iata_code=iata) &
-                 Q(city=city)) |
-                Q(iata_code=search.upper())
-            )
+        airport = Airport.objects.get(
+            (Q(iata_code=iata) &
+             Q(city=city)) |
+            Q(iata_code=search.upper())
+        )
     except (ObjectDoesNotExist, IndexError):
         airport = None
 
@@ -60,7 +60,6 @@ def search_view(request):
             )
 
             api_response = search_from_kiwi_api(search)
-
             if api_response is None:
                 context['error'] = 'No results found, invalid destinations'
 
@@ -68,6 +67,7 @@ def search_view(request):
                 context['error'] = 'No results found, invalid destinations'
 
             else:
+                # TODO OPTIONAL optimize result creation
                 results = [
                     Result.create_result_object_from_kiwi_response(
                         api_response=result,
@@ -75,7 +75,6 @@ def search_view(request):
                     )
                     for result in api_response['data']
                 ]
-
                 context = {
                     'itineraries': results,
                     'search': search
@@ -83,7 +82,6 @@ def search_view(request):
 
                 template = 'search/list_results.html'
         else:
-            # form = SearchForm(request.POST)
             context['form'] = form
 
     return render(request=request, template_name=template, context=context)
