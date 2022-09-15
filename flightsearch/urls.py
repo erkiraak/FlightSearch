@@ -14,6 +14,8 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
+from django.conf import settings
+from django.conf.urls.static import static
 from django.urls import path, include
 from search.views import search_view
 from users.views import profile
@@ -36,4 +38,15 @@ urlpatterns = [
     path('subscriptions/delete', DeleteAllSubscription.as_view(), name='delete_all_subscription'),
     path('subscriptions', ListSubscription.as_view(), name='list_subscription'),
     path('profile/', profile, name='users-profile'),
-]
+] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+
+#
+# if settings.DEBUG:
+#     urlpatterns += patterns('',
+#         url(r'^media/(?P<path>.*)$', 'django.views.static.serve', {
+#             'document_root': settings.MEDIA_ROOT,
+#         }),
+#         url(r'^static/(?P<path>.*)$', 'django.views.static.serve', {
+#             'document_root': settings.STATIC_ROOT,
+#         }),
+# )

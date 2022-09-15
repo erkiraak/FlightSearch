@@ -1,40 +1,261 @@
 {% extends "base.html" %}
+{% load static %}
+{% load duration %}
+{% load listofnames %}
+
 
 
 {% block content %}
-
-<ul>
-  {% for i in itineraries %}
-    <li> From: {{i.fly_from.city}}</li>
-    <li> To: {{i.fly_to.city}}</li>
-    <li> Price: {{i.price}}</li>
-    <li> Price: {{i.departure_date}}</li>
-    <li> Price: {{i.departure_time}}</li>
-    <li> Price: {{i.departure_arrival_time}}</li>
-
-    <li> Price: {{i.return_date}}</li>
-    <li> Price: {{i.return_time}}</li>
-    <li> Price: {{i.return_arrival_time}}</li>
-
-
-    <li></li>
-  {% endfor %}
-</ul>
-
-{% if user.is_authenticated %}
-<form action="{% url 'create_subscription'  search.pk %}" method="get" >
+<form class="form-wrapper" action="{% url 'create_subscription'  search.pk %}" method="get">
     {% csrf_token %}
     {{error}}
-    <input type="submit" name="submit" value="Subscribe to this search" >
+
+    <h5 class="card-title">Results for
+        {{search.fly_from.city}}({{search.fly_from.iata_code}})
+        - {{search.fly_to.city}}({{search.fly_from.iata_code}})
+    </h5>
+
+
+    <div class="container-sm">
+
+        {% for i in itineraries %}
+        <div class="my-1 card">
+            <div class="card-body py-1">
+                <div class="row">
+
+                    <div class="my-1 col-md-10">
+                        <div class="h-100 card p-0 m-0">
+                            <div class="card-body p-0 m-0">
+                                <ul class="list-group list-group-flush my-1">
+
+
+                                    <li class="list-group-item my-0">
+                                        <div class="row align-items-center">
+
+                                            <div class="col-2">
+                                                {% for airline in i.departure_airlines.all %}
+                                                <img src="{{ airline.logo }}"
+                                                     alt="logo"
+                                                     height="20"
+                                                     width="70">
+                                                {% endfor %}
+                                            </div>
+
+                                            <div class="col-3">
+                                                <div class="row ">
+                                                    <p class="text-center h6 m-0">
+                                                        <strong>
+                                                            {{ i.departure_date }}
+                                                        </strong></p>
+                                                </div>
+                                                <div class="row text-center">
+                                                    <p class="m-0"><small>
+                                                        {{ i.departure_airlines.all|listofnames}}
+                                                    </small></p>
+                                                </div>
+                                            </div>
+
+                                            <div class="col-2">
+                                                <div class="row ">
+                                                    <p class="text-center h5 m-0">
+                                                        <strong>
+                                                            {{ i.departure_time|time:"H:i" }}
+                                                        </strong></p>
+                                                </div>
+                                                <div class="row text-center">
+
+                                                    <p class="m-0"><small>
+                                                        {{ i.fly_from.iata_code }}
+                                                    </small></p>
+                                                </div>
+                                            </div>
+
+                                            <div class="col-3">
+                                                <div class="row ">
+                                                    <p class="text-center h6 m-0">
+                                                            {{ i.departure_duration|duration }}
+                                                    </p>
+                                                </div>
+                                                <img src="/media/{{ i.number_of_stops_departure }}stop.png"
+                                                     alt="logo"
+                                                     height="16"
+                                                     width="100">
+                                                <div class="row text-center">
+                                                    <p class="m-0"><small>
+                                                    {% if i.number_of_stops_departure == 0 %}
+                                                        Direct
+
+                                                    {% elif i.number_of_stops_departure == 1 %}
+                                                        1 stop: {{ i.connecting_airport_departure.all|listofnames }}
+                                                    {% else %}
+                                                        {{ i.number_of_stops_departure }} stops:
+                                                        {{ i.connecting_airport_departure.all|listofnames }}
+                                                    {% endif %}
+                                                    </small></p>
+                                                </div>
+                                            </div>
+
+                                            <div class="col-2">
+                                                <div class="row ">
+                                                    <p class="text-center h5 m-0">
+                                                        <strong>
+                                                            {{ i.departure_arrival_time|time:"H:i" }}
+                                                        </strong></p>
+                                                </div>
+                                                <div class="row text-center">
+                                                    <p class="m-0"><small>
+                                                        {{ i.fly_to.iata_code }}
+                                                    </small></p>
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                    </li>
+
+                                    {% if i.return_duration %}
+                                    <li class="list-group-item my-0">
+                                        <div class="row align-items-center">
+
+                                            <div class="col-2">
+                                                {% for airline in i.return_airlines.all %}
+
+                                                <img src="{{ airline.logo }}"
+                                                     alt="logo"
+                                                     height="20"
+                                                     width="70">
+                                                {% endfor %}
+
+                                            </div>
+
+                                            <div class="col-3">
+                                                <div class="row ">
+                                                    <p class="text-center h6 m-0">
+                                                        <strong>
+                                                            {{ i.return_date }}
+                                                        </strong></p>
+                                                </div>
+
+                                                <div class="row text-center">
+                                                    <p class="m-0"><small>
+                                                        {{ i.return_airlines.all|listofnames}}
+                                                    </small></p>
+                                                </div>
+
+                                            </div>
+
+                                            <div class="col-2">
+                                                <div class="row ">
+                                                    <p class="text-center h5 m-0">
+                                                        <strong>
+                                                            {{ i.return_time|time:"H:i" }}
+                                                        </strong></p>
+                                                </div>
+
+                                                <div class="row text-center">
+
+                                                    <p class="m-0"><small>
+                                                        {{ i.fly_to.iata_code }}
+                                                    </small></p>
+                                                </div>
+
+                                            </div>
+
+                                            <div class="col-3">
+                                                <div class="row ">
+                                                    <p class="text-center h6 m-0">
+                                                            {{ i.return_duration|duration }}
+                                                    </p>
+                                                </div>
+                                                <img src="/media/{{ i.number_of_stops_return }}stop.png"
+                                                     alt="logo"
+                                                     height="16"
+                                                     width="100">
+                                                    <!-- # TODO OPTIONAL fix airport display order-->
+                                                <div class="row text-center">
+                                                    <p class="m-0"><small>
+                                                    {% if i.number_of_stops_return == 0 %}
+                                                        Direct
+
+                                                    {% elif i.number_of_stops_return == 1 %}
+                                                        1 stop: {{ i.connecting_airport_return.all|listofnames }}
+                                                    {% else %}
+                                                        {{ i.number_of_stops_return }} stops:
+                                                        {{ i.connecting_airport_return.all|listofnames }}
+                                                    {% endif %}
+                                                    </small></p>
+                                                </div>
+
+                                            </div>
+
+                                            <div class="col-2">
+                                                <div class="row ">
+                                                    <p class="text-center h5 m-0">
+                                                        <strong>
+                                                            {{ i.return_arrival_time|time:"H:i" }}
+                                                        </strong></p>
+                                                </div>
+
+                                                <div class="row text-center">
+
+                                                    <p class="m-0"><small>
+                                                        {{ i.fly_from.iata_code }}
+                                                    </small></p>
+                                                </div>
+
+                                            </div>
+
+                                        </div>
+
+
+                                    </li>
+                                    {% endif %}
+
+                                </ul>
+
+                            </div>
+                        </div>
+                    </div>
+
+                    <!--        price            -->
+
+                    <div class="my-1 col ">
+                        <div class="h-100 card">
+                            <div class="card-body py-0 my-0">
+                                    <div class="row mt-2 mb-0">
+                                        <h4 class="card-title">{{i.price}}</h4>
+
+                                    </div>
+                                    <div class="row mt-0 mb-2">
+                                        <h6 class="card-title">{{search.curr}}</h6>
+
+                                    </div>
+
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+
+        <div class="d-grid gap-2 col-12 mx-auto">
+            {% if user.is_authenticated %}
+                <button type="submit" id="search-button"
+                        class="w-100 btn btn-primary">
+                    Subscribe
+
+                </button>
+            {% else %}
+                <button disabled type="submit" id="search-button-disabled"
+                        class="w-100 btn btn-primary">
+                    Please login to subscribe
+
+                </button>
+            {% endif %}
+
+        </div>
+    </div>
 </form>
-
-{% else %}
-<form>
-    <input disabled type="submit" name="submit" value="Subscribe to this search">
-</form>
-
-<h6>Please login to subscribe</h6>
-
-{% endif %}
 
 {% endblock %}
