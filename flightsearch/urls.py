@@ -26,8 +26,6 @@ from subscription.views import (CreateSubscription,
                                 DeleteSubscription,
                                 DeleteAllSubscription
                                 )
-from django.conf import settings
-from django.conf.urls.static import static
 
 urlpatterns = [
 
@@ -63,6 +61,10 @@ urlpatterns = [
         'profile/',
         profile,
         name='users-profile'),
+    path(
+        'edit_profile/',
+        edit_profile,
+        name='users-edit_profile'),
     path(
         'delete_account/', 
         delete_profile,

@@ -4,127 +4,87 @@
 {% block content %}
 
 <form class="form-wrapper">
-    <!--    {% csrf_token %}-->
-    <!--    {{error}}-->
-
+        {% csrf_token %}
+        {{error}}
 
     <h5 class="card-title">Your subscriptions:
     </h5>
 
     <div class="container-sm">
-        <div class="my-2 card">
-            <div class="card my-0">
+            <div class="card my-2 mx-0 px-0 card-header">
 
-                <div class="row mx-0 align-items-center">
-                    <div class="my-0 mx-0 px-0 col">
-                        <div class="card h-100 card-header border-0">
-                            <strong>Origin</strong>
-                        </div>
+                <div class="row m-0 p-0 align-items-center">
+                    <div class="col">
+                        <strong>Origin</strong>
                     </div>
+                    <div class="col">
+                        <strong>Destination</strong>
+                    </div>
+                    <div class="col-2">
+                        <strong>Dates</strong>
+                    </div>
+                    <div class="col">
+                        <strong>Email</strong>
+                    </div>
+                    <div class="col-1">
+                        <strong>Price</strong>
+                    </div>
+                    <div class="col-1">
 
-                    <div class="my-0 mx-0 px-0 col">
-                        <div class="card h-100 card-header border-0">
-                            <strong>Destination</strong>
-                        </div>
-                    </div>
-
-                    <div class="my-0 mx-0 px-0 col-2">
-                        <div class="card h-100 card-header border-0">
-                            <strong>Dates</strong>
-                        </div>
-                    </div>
-
-                    <div class="my-0 mx-0 px-0 col">
-                        <div class="card h-100 card-header border-0">
-                            <strong>Email</strong>
-                        </div>
-                    </div>
-                    <div class="my-0 mx-0 px-0 col-1">
-                        <div class="card h-100 card-header border-0 px-0">
-                            <strong>Price</strong>
-                        </div>
-                    </div>
-                    <div class="my-0 mx-0 px-0 col-1">
-                        <div class="card h-100 card-header border-0">
-                            <strong>Edit</strong>
-                        </div>
                     </div>
                 </div>
             </div>
 
             {% for s in subscription %}
-            <div class="card my-1">
-
+            <div class="card my-2">
                 <div class="row mx-0 align-items-center">
-
-                    <div class="my-1 mx-0 px-0 col">
-                        <div class="card border-0">
-                            {{ s.search.fly_from }}
-                        </div>
+                    <div class="col px-1">
+                        {{ s.search.fly_from }}
+                    </div>
+                    <div class="col px-1">
+                        {{ s.search.fly_to }}
+                    </div>
+                    <div class="col-2 px-1">
+                        {{ s.search.departure_date }}
+                        {% if s.search.return_date %}
+                        - {{ s.search.return_date }}
+                        {% endif %}
                     </div>
 
-                    <div class="my-1 mx-0 px-0 col">
-                        <div class="card border-0">
-                            {{ s.search.fly_to }}
-                        </div>
+                    <div class="col px-1">
+                        {{ s.email }}
                     </div>
 
-                    <div class="my-1 mx-0 px-0 col-2">
-                        <div class="card border-0">
-                            {{ s.search.departure_date }}
-                            {% if s.search.return_date %}
-                            - {{ s.search.return_date }}
-                            {% endif %}
-
-                        </div>
+                    <div class="col-1 px-1">
+                        <p class="m-0"> {{ s.price_to }} </p>
+                        <p class="m-0"> {{ s.curr }} </p>
                     </div>
 
-                    <div class="my-1 mx-0 px-0 col">
-                        <div class="card border-0">
-                            {{ s.email }}
-                        </div>
-                    </div>
+                    <div class="col-1 px-0">
+                        <button
+                                type="button"
+                                class="btn-sm  btn btn-outline-primary w-100"
+                                data-bs-toggle="modal"
+                                data-bs-target="#update-modal"
+                                data-update_url="{% url 'update_subscription' s.id %}"
+                                data-price="{{ s.price_to }}"
+                                data-curr="{{ s.curr }}"
+                                data-email="{{ s.email }}"
+                                data-update_text="{{ s.search.fly_from }} - {{ s.search.fly_to }}"
+                        >
+                            Update
+                        </button>
 
-                    <div class="my-1 mx-0 px-0 col-1">
-                        <div class="card border-0">
-                            <p class="m-0"> {{ s.price_to }} </p>
-                            <p class="m-0"> {{ s.curr }} </p>
-
-                        </div>
-                    </div>
-
-                    <div class="my-1 mx-0 px-0 col-1">
-                        <div class="card border-0">
-
-                            <button
-                                    type="button"
-                                    class="btn-sm  btn btn-outline-primary w-100"
-                                    data-bs-toggle="modal"
-                                    data-bs-target="#update-modal"
-                                    data-update_url="{% url 'update_subscription' s.id %}"
-                                    data-price="{{ s.price_to }}"
-                                    data-curr="{{ s.curr }}"
-                                    data-email="{{ s.email }}"
-                                    data-update_text="{{ s.search.fly_from }} - {{ s.search.fly_to }}"
-
-                            >
-                                Update
-                            </button>
-
-                            <button
-                                    type="button"
-                                    class="btn-sm  btn btn-outline-danger w-100"
-                                    data-bs-toggle="modal"
-                                    data-bs-target="#delete-modal"
-                                    data-delete_url="{% url 'delete_subscription' s.id %}"
-                                    data-delete_info="{{ s.search.fly_from }} - {{ s.search.fly_to }}"
-
-                            >
-                                Delete
-                            </button>
-
-
-                        </div>
+                        <button
+                                type="button"
+                                class="btn-sm  btn btn-outline-danger w-100"
+                                data-bs-toggle="modal"
+                                data-bs-target="#delete-modal"
+                                data-delete_url="{% url 'delete_subscription' s.id %}"
+                                data-delete_info="{{ s.search.fly_from }} - {{ s.search.fly_to }}"
+                        >
+                            Delete
+                        </button>
                     </div>
                 </div>
             </div>
@@ -132,7 +92,7 @@
 
             <button
                     type="button"
-                    class="btn btn-danger"
+                    class="btn btn-danger w-100"
                     data-bs-toggle="modal"
                     data-bs-target="#delete-all-modal"
                     data-delete_url="{% url 'delete_all_subscription' %}"
@@ -140,14 +100,7 @@
                 Delete all subscriptions
             </button>
         </div>
-
-
-    </div>
-
 </form>
-
-
-<br>
 
 
 <div class="modal fade" id="delete-modal">
@@ -239,15 +192,11 @@
 
                 <!-- Modal body -->
                 <div class="modal-body">
-                    <p id="id_update_text">
-
-                    </p>
+                    <p id="id_update_text"></p>
                     <p>
                         <label for="id_price_to">Price to:</label>
                         <input type="number" name="price_to" value=""
                                min="0" id="id_price_to">
-
-
                     </p>
                     <p>
                         <label for="id_curr">Curr:</label>

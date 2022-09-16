@@ -17,7 +17,7 @@ class Airport(models.Model):
 
 
 class Airline(models.Model):
-    iata_code = models.CharField(max_length=2)
+    iata_code = models.CharField(max_length=3)
     name = models.CharField(max_length=50, null=True, blank=True)
     logo = models.ImageField(upload_to='./media/airline_logos', blank=True)
 
@@ -31,7 +31,7 @@ class Airline(models.Model):
         )
         a.save()
         return a
-
+    # TODO OPTIONAL implement airline search api
     @classmethod
     def get_or_create_airline(cls, code):
         try:
