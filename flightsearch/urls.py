@@ -18,15 +18,19 @@ from django.conf import settings
 from django.conf.urls.static import static
 from django.urls import path, include
 from search.views import search_view
-from users.views import profile
+from users.views import profile, edit_profile, delete_profile, \
+    CreateProfilePageView
 from subscription.views import (CreateSubscription,
                                 ListSubscription,
                                 UpdateSubscription,
                                 DeleteSubscription,
                                 DeleteAllSubscription
                                 )
+from django.conf import settings
+from django.conf.urls.static import static
 
 urlpatterns = [
+
     path('admin/', admin.site.urls),
     path('accounts/', include('allauth.urls')),
     path('', search_view, name='index'),
@@ -59,4 +63,12 @@ urlpatterns = [
         'profile/',
         profile,
         name='users-profile'),
+    path(
+        'delete_account/', 
+        delete_profile,
+        name='users-delete_account'),
+    path(
+        'create_profile_page/', 
+        CreateProfilePageView.as_view(), 
+        name='create_profile_page')
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

@@ -146,10 +146,14 @@ STATIC_URL = 'static/'
 STATICFILES_DIRS = (
     os.path.join(BASE_DIR, "static/"),
 )
+
+MEDIA_URL = '//'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'profile_images')
+
 # Static files (CSS, JavaScript, Images)
 
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media').replace('\\', '/')
-MEDIA_URL = '/media/'
+# MEDIA_ROOT = os.path.join(BASE_DIR, 'media').replace('\\', '/')
+# MEDIA_URL = '/media/'
 
 
 # Default primary key field type
@@ -182,7 +186,6 @@ SOCIALACCOUNT_PROVIDERS = {
         }
     }
 }
-
 
 # TODO clean
 """
