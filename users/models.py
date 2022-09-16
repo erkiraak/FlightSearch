@@ -1,6 +1,6 @@
 from django.db import models
 from django.contrib.auth import get_user_model
-from subscription.models import Subscription
+
 
 
 class Profile(models.Model):
@@ -17,7 +17,6 @@ class Profile(models.Model):
         blank=True
     )
     bio = models.TextField()
-    subscription = models.ManyToManyField(Subscription, blank=True)
 
     def __str__(self):
         return self.user.username

@@ -36,12 +36,18 @@
         </ul>
       </div>
       <div class="d-grid gap-2 d-md-block">
-        <br><a type="button" class="btn btn-outline-dark"
+        <br>
+        {% if user.profile.id %}
+        <a type="button" class="btn btn-outline-dark"
                class="btn btn-primary" href="{% url 'users-edit_profile' %}" role="button">Edit profile</a>
         <a type="button" class="btn btn-outline-danger" class="btn btn-primary" href="{% url 'users-delete_account'%}" role="button">Remove profile</a>
+        {% else %}
+        <a type="button" class="btn btn-outline-dark"
+               class="btn btn-primary" href="{% url 'create_profile_page' %}" role="button">Create profile</a>
       </div>
     </div>
   </section>
-{% endblock content %}
+{% endif %}
+{% endblock %}
 
 
