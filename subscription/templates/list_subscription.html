@@ -107,14 +107,12 @@
     <div class="modal-dialog modal-sm">
         <div class="modal-content">
 
-            <!-- Modal Header -->
             <div class="modal-header">
                 <h6 class="modal-title">Delete</h6>
                 <button type="button" class="btn-close"
                         data-bs-dismiss="modal"></button>
             </div>
 
-            <!-- Modal body -->
             <div class="modal-body justify-content-left">
                 <p>
                     Are you sure you want to delete the subscription
@@ -125,7 +123,6 @@
 
             </div>
 
-            <!-- Modal footer -->
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary btn-smm"
                         data-bs-dismiss="modal">Cancel
@@ -146,21 +143,18 @@
     <div class="modal-dialog modal-sm">
         <div class="modal-content">
 
-            <!-- Modal Header -->
             <div class="modal-header">
                 <h6 class="modal-title">Delete</h6>
                 <button type="button" class="btn-close"
                         data-bs-dismiss="modal"></button>
             </div>
 
-            <!-- Modal body -->
             <div class="modal-body justify-content-left">
                 <p>
                     Are you sure you want to delete all your subscriptions?
                 </p>
             </div>
 
-            <!-- Modal footer -->
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary btn-smm"
                         data-bs-dismiss="modal">Cancel
@@ -183,14 +177,12 @@
             <form action="" method="POST">
                 {% csrf_token %}
 
-                <!-- Modal Header -->
                 <div class="modal-header">
                     <h6 class="modal-title">Update</h6>
                     <button type="button" class="btn-close"
                             data-bs-dismiss="modal"></button>
                 </div>
 
-                <!-- Modal body -->
                 <div class="modal-body">
                     <p id="id_update_text"></p>
                     <p>
@@ -282,7 +274,6 @@
 
                 </div>
 
-                <!-- Modal footer -->
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary btn-smm"
                             data-bs-dismiss="modal">Cancel
@@ -300,10 +291,10 @@
 
 <script>
     $('#delete-modal').on('show.bs.modal', function (event) {
-        var button = $(event.relatedTarget)
-        var delete_info = button.data('delete_info')
-        var url = button.data('delete_url')
-        var modal = $(this)
+        let button = $(event.relatedTarget)
+        let delete_info = button.data('delete_info')
+        let url = button.data('delete_url')
+        let modal = $(this)
 
         modal.find('.modal-body .info-entry').text(delete_info)
         modal.find('.modal-footer form').attr('action', url)
@@ -313,9 +304,9 @@
 
 <script>
     $('#delete-all-modal').on('show.bs.modal', function (event) {
-        var button = $(event.relatedTarget)
-        var url = button.data('delete_url')
-        var modal = $(this)
+        let button = $(event.relatedTarget)
+        let url = button.data('delete_url')
+        let modal = $(this)
 
         modal.find('.modal-footer form').attr('action', url)
     })
@@ -324,13 +315,13 @@
 
 <script>
     $('#update-modal').on('show.bs.modal', function (event) {
-        var button = $(event.relatedTarget)
-        var price = button.data('price')
-        var curr = button.data('curr')
-        var email = button.data('email')
-        var update_text = button.data('update_text')
-        var url = button.data('update_url')
-        var modal = $(this)
+        let button = $(event.relatedTarget)
+        let price = button.data('price')
+        let curr = button.data('curr')
+        let email = button.data('email')
+        let update_text = button.data('update_text')
+        let url = button.data('update_url')
+        let modal = $(this)
 
         modal.find('#id_price_to').val(price)
         modal.find('#id_curr').val(curr)

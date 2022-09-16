@@ -99,7 +99,7 @@ class Flight(models.Model):
         flight.save()
         return flight
 
-
+# TODO OPTIONAL save cheapest result price
 class Search(models.Model):
     user = models.ForeignKey(
         User,
@@ -171,7 +171,7 @@ class Search(models.Model):
         null=True,
         default=None,
     )
-    limit = models.IntegerField(default=10)
+    limit = models.IntegerField(default=5)
     locale = models.CharField(max_length=5, default='en')
 
     def __str__(self):
@@ -182,12 +182,13 @@ class Search(models.Model):
             total_objects = Search.objects.filter(user=self.user).count()
 
             if total_objects >= 25:
-                self.delete_search(24)
+                self.delete_search(self.user, 24)
 
         super().save(*args, **kwargs)
 
-    def delete_search(self, nr_remaining):
-        pk = Search.objects.filter(user=self.user
+    @staticmethod
+    def delete_search(user, nr_remaining):
+        pk = Search.objects.filter(user=user
                                    ).order_by('-id'
                                               ).values('pk')[nr_remaining:]
 

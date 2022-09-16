@@ -17,7 +17,7 @@ from django.contrib import admin
 from django.conf import settings
 from django.conf.urls.static import static
 from django.urls import path, include
-from search.views import search_view
+from search.views import search_view, DeleteAllSearch, ListSearch
 from users.views import profile, edit_profile, delete_profile, \
     CreateProfilePageView
 from subscription.views import (CreateSubscription,
@@ -58,19 +58,33 @@ urlpatterns = [
         name='list_subscription'
     ),
     path(
+        'search_history/',
+        ListSearch.as_view(),
+        name='list_search',
+    ),
+    path(
+        'search_history/delete',
+        DeleteAllSearch.as_view(),
+        name='delete_all_search'
+    ),
+    path(
         'profile/',
         profile,
-        name='users-profile'),
+        name='users-profile'
+    ),
     path(
         'edit_profile/',
         edit_profile,
-        name='users-edit_profile'),
+        name='users-edit_profile'
+    ),
     path(
         'delete_account/', 
         delete_profile,
-        name='users-delete_account'),
+        name='users-delete_account'
+    ),
     path(
         'create_profile_page/', 
         CreateProfilePageView.as_view(), 
-        name='create_profile_page')
+        name='create_profile_page'
+    ),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

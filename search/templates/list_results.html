@@ -44,8 +44,7 @@
                                 </div>
                                 <div class="row text-center">
                                     <p class="m-0"><small>
-                                        {{
-                                        i.departure_airlines.all|listofnames}}
+                                        {{ i.departure_airlines.all|listofnames }}
                                     </small></p>
                                 </div>
                             </div>
@@ -77,20 +76,15 @@
                                      width="100">
                                 <div class="row text-center">
                                     <p class="m-0"><small>
-                                        {% if i.number_of_stops_departure == 0
-                                        %}
+                                        {% if i.number_of_stops_departure == 0 %}
                                         Direct
 
-                                        {% elif i.number_of_stops_departure == 1
-                                        %}
-                                        1 stop: {{
-                                        i.connecting_airport_departure.all|listofnames
-                                        }}
+                                        {% elif i.number_of_stops_departure == 1 %}
+                                        1 stop: {{ i.connecting_airport_departure.all|listofnames }}
+
                                         {% else %}
                                         {{ i.number_of_stops_departure }} stops:
-                                        {{
-                                        i.connecting_airport_departure.all|listofnames
-                                        }}
+                                        {{ i.connecting_airport_departure.all|listofnames }}
                                         {% endif %}
                                     </small></p>
                                 </div>
@@ -100,9 +94,7 @@
                                 <div class="row ">
                                     <p class="text-center h5 m-0">
                                         <strong>
-                                            {{
-                                            i.departure_arrival_time|time:"H:i"
-                                            }}
+                                            {{ i.departure_arrival_time|time:"H:i" }}
                                         </strong></p>
                                 </div>
                                 <div class="row text-center">
@@ -170,14 +162,10 @@
                                         {% if i.number_of_stops_return == 0 %}
                                         Direct
                                         {% elif i.number_of_stops_return == 1 %}
-                                        1 stop: {{
-                                        i.connecting_airport_return.all|listofnames
-                                        }}
+                                        1 stop: {{ i.connecting_airport_return.all|listofnames }}
                                         {% else %}
                                         {{ i.number_of_stops_return }} stops:
-                                        {{
-                                        i.connecting_airport_return.all|listofnames
-                                        }}
+                                        {{ i.connecting_airport_return.all|listofnames }}
                                         {% endif %}
                                     </small></p>
                                 </div>
@@ -187,8 +175,7 @@
                                 <div class="row ">
                                     <p class="text-center h5 m-0">
                                         <strong>
-                                            {{ i.return_arrival_time|time:"H:i"
-                                            }}
+                                            {{ i.return_arrival_time|time:"H:i" }}
                                         </strong></p>
                                 </div>
                                 <div class="row text-center">
@@ -204,8 +191,6 @@
 
                     </div>
                 </div>
-
-                <!--        price            -->
 
                 <div class="my-1 col ">
                     <div class="h-100 card">
@@ -228,16 +213,16 @@
             {% if user.is_authenticated %}
             <button
                     type="button"
-                    class="btn-sm  btn btn-outline-primary w-100"
+                    class="btn btn-primary w-100"
                     data-bs-toggle="modal"
-                    data-bs-target="#update-modal"
-                    data-update_url="{% url 'update_subscription' s.id %}"
-                    data-price="{{ s.price_to }}"
-                    data-curr="{{ s.curr }}"
-                    data-email="{{ s.email }}"
-                    data-update_text="{{ s.search.fly_from }} - {{ s.search.fly_to }}"
+                    data-bs-target="#create_subscription-modal"
+                    data-update_url="{% url 'create_subscription' search.id %}"
+                    data-price="{{ search.price_to }}"
+                    data-curr="{{ search.curr }}"
+                    data-email="{{ user.email }}"
+                    data-text="{{ search.fly_from }} - {{ search.fly_to }}"
             >
-                Update
+                Subscribe
             </button>
             {% else %}
             <button disabled type="submit" id="search-button-disabled"
@@ -250,5 +235,141 @@
         </div>
     </div>
 </form>
+
+
+<div class="modal fade" id="create_subscription-modal">
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+            <form action="" method="POST">
+                {% csrf_token %}
+
+                <div class="modal-header">
+                    <h6 class="modal-title">Subscribe to search</h6>
+                    <button type="button" class="btn-close"
+                            data-bs-dismiss="modal"></button>
+                </div>
+
+                <div class="modal-body">
+                    <p id="id_text"></p>
+                    <p>
+                        <label for="id_price_to">Price to:</label>
+                        <input type="number" name="price_to" value=""
+                               min="0" id="id_price_to">
+                    </p>
+                    <p>
+                        <label for="id_curr">Curr:</label>
+                        <select name="curr" id="id_curr">
+                            <option value="EUR">Euro</option>
+
+                            <option value="USD">US Dollar</option>
+
+                            <option value="GBP">British Pound</option>
+
+                            <option value="AUD">Australian Dollar</option>
+
+                            <option value="CAD">Canadian Dollar</option>
+
+                            <option value="NZD">New Zealand Dollar</option>
+
+                            <option value="CHF">Swiss Franc</option>
+
+                            <option value="SEK">Swedish Krona</option>
+
+                            <option value="DKK">Danish Krone</option>
+
+                            <option value="NOK">Norwegian Krone</option>
+
+                            <option value="JPY">Japanese Yen</option>
+
+                            <option value="MXN">Mexican Peso</option>
+
+                            <option value="BRL">Brazilian Real</option>
+
+                            <option value="CNY">Chinese Yuan</option>
+
+                            <option value="RUB">Russian Ruble</option>
+
+                            <option value="INR">Indian Rupee</option>
+
+                            <option value="KRW">South Korean Won</option>
+
+                            <option value="TRY">Turkish Lira</option>
+
+                            <option value="ZAR">South African Rand</option>
+
+                            <option value="PLN">Polish Zloty</option>
+
+                            <option value="RON">Romanian Leu</option>
+
+                            <option value="HUF">Hungarian Forint</option>
+
+                            <option value="CZK">Czech Koruna</option>
+
+                            <option value="PHP">Philippine Peso</option>
+
+                            <option value="MYR">Malaysian Ringgit</option>
+
+                            <option value="THB">Thai Baht</option>
+
+                            <option value="IDR">Indonesian Rupiah</option>
+
+                            <option value="ISK">Icelandic Krona</option>
+
+                            <option value="BGN">Bulgarian Lev</option>
+
+                            <option value="HRK">Croatian Kuna</option>
+
+                            <option value="RON">Romanian Leu</option>
+
+                            <option value="TRY">Turkish Lira</option>
+
+                            <option value="BRL">Brazilian Real</option>
+
+                            <option value="CNY">Chinese Yuan</option>
+
+                        </select>
+
+
+                    </p>
+                    <p>
+                        <label for="id_email">Email:</label>
+                        <input type="email" name="email"
+                               value="" maxlength="254"
+                               required="" id="id_email">
+                    </p>
+
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary btn-smm"
+                            data-bs-dismiss="modal">Cancel
+                    </button>
+                    <button type="submit" class="btn btn-primary btn-smm">
+                        Subscribe
+                    </button>
+
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+    $('#create_subscription-modal').on('show.bs.modal', function (event) {
+        let button = $(event.relatedTarget);
+        let price = button.data('price')
+        let curr = button.data('curr')
+        let email = button.data('email')
+        let text = button.data('update_text')
+        let url = button.data('update_url')
+        let modal = $(this)
+
+        modal.find('#id_price_to').val(price)
+        modal.find('#id_curr').val(curr)
+        modal.find('#id_email').val(email)
+        modal.find('#id_text').text(text)
+        modal.find('.modal-content form').attr('action', url)
+    })
+</script>
 
 {% endblock %}
