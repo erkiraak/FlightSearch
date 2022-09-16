@@ -1,8 +1,7 @@
 import requests
+import environ
 
-from django.http import HttpResponse
 from .models import Airline
-
 
 
 def get_airline_data_from_rapidapi():
@@ -12,7 +11,7 @@ def get_airline_data_from_rapidapi():
     """
     api_endpoint = 'https://iata-and-icao-codes.p.rapidapi.com/airlines'
     headers = {
-        "X-RapidAPI-Key": "8d22ba8fdcmshd22bde68fc3e5e9p15e8bdjsn98ccb2520125",
+        "X-RapidAPI-Key": environ.Env(DEBUG=(bool, False))('RAPIDAPI_API_KEY'),
         "X-RapidAPI-Host": "iata-and-icao-codes.p.rapidapi.com"
     }
     errors = ""
@@ -31,7 +30,9 @@ def get_airline_data_from_rapidapi():
                 a = Airline(
                     iata_code=airline.get('iata_code'),
                     name=airline.get('name'),
-                    logo=f"https://daisycon.io/images/airline/?width=350&height=100&color=ffffff&iata={airline.get('iata_code')}"
+                    logo=f"https://daisycon.io/images/airline/"
+                         f"?width=350&height=100&color=ffffff&iata="
+                         f"{airline.get('iata_code')}"
                 )
                 a.save()
             except Exception as ex:

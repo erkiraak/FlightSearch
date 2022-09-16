@@ -3,7 +3,7 @@ from datetime import datetime, timedelta
 from django.contrib.auth.models import User
 from django.db import models
 
-from constants import CABINS, CURRENCIES, STOPOVERS, FLIGHT_TYPE, SEARCH_TYPE
+from constants import CABINS, CURRENCIES, FLIGHT_TYPE, SEARCH_TYPE
 
 
 class Airport(models.Model):
@@ -26,7 +26,8 @@ class Airline(models.Model):
         a = cls(
             iata_code=code,
             name=code,
-            logo=f"https://daisycon.io/images/airline/?width=350&height=100&color=ffffff&iata={code}"
+            logo=f"https://daisycon.io/images/airline/"
+                 f"?width=350&height=100&color=ffffff&iata={code}"
         )
         a.save()
         return a
@@ -169,9 +170,8 @@ class Search(models.Model):
         blank=True,
         null=True,
         default=None,
-        choices=STOPOVERS
     )
-    limit = models.IntegerField(default=2)
+    limit = models.IntegerField(default=10)
     locale = models.CharField(max_length=5, default='en')
 
     def __str__(self):
@@ -194,7 +194,7 @@ class Search(models.Model):
         for key in pk:
             try:
                 Search.objects.get(pk=key['pk']).delete()
-            except models.ProtectedError as e:
+            except models.ProtectedError:
                 pass
 
     # TODO optional add error handling
@@ -360,13 +360,14 @@ class Result(models.Model):
                 result.departure_flights.add(flight_object)
                 result.departure_airlines.add(flight_object.airline)
                 if flight_object.fly_to not in [result.fly_to, result.fly_from]:
-                    result.connecting_airport_departure.add(flight_object.fly_to)
+                    result.connecting_airport_departure.add(
+                        flight_object.fly_to
+                    )
             else:
                 result.return_flights.add(flight_object)
                 result.return_airlines.add(flight_object.airline)
                 if flight_object.fly_to not in [result.fly_to, result.fly_from]:
                     result.connecting_airport_return.add(flight_object.fly_to)
-
 
         return result
 

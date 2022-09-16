@@ -151,7 +151,9 @@ class SearchForm(forms.ModelForm):
                 raise ValidationError("Return date cannot be in the past")
 
             if departure_date and departure_date > return_date:
-                raise ValidationError("Return date cannot be before departure date")
+                raise ValidationError(
+                    "Return date cannot be before departure date"
+                )
             else:
                 return return_date
 

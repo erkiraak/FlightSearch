@@ -113,6 +113,15 @@ a {
     padding: 0.1rem 0.15rem;
 }
 
+.btn-sm {
+    font-size: 0.75rem;
+    padding: 0.05rem 0.05rem;
+}
+.btn-smm {
+    font-size: 1.0rem;
+    padding: 0.05rem 0.25rem;
+}
+
 
 .user-profile-body user-profile {
     max-width: 600px;
