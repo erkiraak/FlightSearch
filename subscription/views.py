@@ -13,6 +13,13 @@ class CreateSubscription(LoginRequiredMixin, CreateView):
     success_url = reverse_lazy('list_subscription')
     fields = ('price_to', 'curr', 'email')
     object = None
+    context_object_name = 'search'
+
+    def get_context_data(self, **kwargs):
+        context = super(CreateSubscription, self).get_context_data(**kwargs)
+        search = Search.objects.filter(id=self.kwargs['pk'])
+        context['search'] = search
+        return context
 
     def get_form(self, form_class=None):
         form = super(CreateSubscription, self).get_form(form_class)
@@ -34,13 +41,7 @@ class CreateSubscription(LoginRequiredMixin, CreateView):
         return super().form_valid(form)
 
 
-class ViewSubscription(DetailView):
-    template_name = 'view_subscription.html'
-    model = Subscription
-    context_object_name = 'subscription'
-
-
-class ListSubscription(ListView):
+class ListSubscription(LoginRequiredMixin, ListView):
     template_name = 'list_subscription.html'
     model = Subscription
     context_object_name = 'subscription'
@@ -51,7 +52,6 @@ class ListSubscription(ListView):
 
 
 class UpdateSubscription(LoginRequiredMixin, UpdateView):
-    template_name = 'update_subscription.html'
     model = Subscription
     success_url = reverse_lazy('list_subscription')
     fields = ('price_to', 'curr', 'email')
@@ -67,14 +67,12 @@ class UpdateSubscription(LoginRequiredMixin, UpdateView):
 
 
 class DeleteSubscription(LoginRequiredMixin, DeleteView):
-    template_name = 'delete_subscription.html'
     model = Subscription
     success_url = reverse_lazy('list_subscription')
     context_object_name = 'subscription'
 
 
 class DeleteAllSubscription(LoginRequiredMixin, DeleteView):
-    template_name = 'delete_all_subscription.html'
     model = Subscription
     success_url = reverse_lazy('index')
     context_object_name = 'subscription'

@@ -43,28 +43,6 @@ CURRENCIES = [
 ]
 
 
-SEATS = [
-    (0, '0'),
-    (1, '1'),
-    (2, '2'),
-    (3, '3'),
-    (4, '4'),
-    (5, '5'),
-    (6, '6'),
-    (7, '7'),
-    (8, '8'),
-    (9, '9'),
-]
-
-STOPOVERS = [
-    (None, 'Not specified'),
-    (0, 'Direct flights'),
-    (1, 'One stopover'),
-    (2, 'Two stopovers'),
-    (3, 'Three stopovers'),
-    (4, 'Four stopovers'),
-]
-
 FLIGHT_TYPE = [
     ('round', 'Round trip'),
     ('oneway', 'One way'),
@@ -72,6 +50,6 @@ FLIGHT_TYPE = [
 
 SEARCH_TYPE = [
     ('fixed', 'Fixed dates'),
-    ('duration', 'Cheapests flights between dates '),
+    ('duration', 'Cheapest flights between dates '),
 ]
 

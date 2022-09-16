@@ -57,7 +57,6 @@ def create_query_for_kiwi_api(search: Search) -> dict:
         query['nights_in_dst_from'] = search.nights_in_dst_from
         query['nights_in_dst_to'] = search.nights_in_dst_to
 
-
     if not search.max_fly_duration != '':
         query['max_fly_duration'] = search.max_fly_duration
 

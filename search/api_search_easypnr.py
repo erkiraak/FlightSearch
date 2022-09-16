@@ -1,7 +1,6 @@
 import environ
 import requests
 
-from django.http import HttpResponse
 from .models import Airport
 
 

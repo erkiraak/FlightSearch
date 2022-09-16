@@ -318,8 +318,8 @@
 
 <script>
     $('#id_search_type').on('change', function (e) {
-        var optionSelected = $("option:selected", this);
-        var valueSelected = this.value;
+        let optionSelected = $("option:selected", this);
+        let valueSelected = this.value;
         const trip_length_from = document.getElementById('id_nights_in_dst_from');
         const trip_length_to = document.getElementById('id_nights_in_dst_to');
         const flexible = document.getElementById('id_flexible');
@@ -349,8 +349,8 @@
 
 <script>
     $('#id_flight_type').on('change', function (e) {
-        var optionSelected = $("option:selected", this);
-        var valueSelected = this.value;
+        let optionSelected = $("option:selected", this);
+        let valueSelected = this.value;
         const trip_length_from = document.getElementById('id_nights_in_dst_from');
         const trip_length_to = document.getElementById('id_nights_in_dst_to');
         const return_date = document.getElementById('id_return_date');
@@ -379,16 +379,15 @@
 
 <script>
     window.onload = function () {
-        var optionSelected = $("option:selected", this);
-        var valueSelected = this.value;
         const trip_length_from = document.getElementById('id_nights_in_dst_from');
         const trip_length_to = document.getElementById('id_nights_in_dst_to');
         const return_date = document.getElementById('id_return_date');
         const search_type = document.getElementById('id_search_type');
         const flexible = document.getElementById('id_flexible');
+        const flight_type = document.getElementById('id_flight_type');
 
 
-        return_date.disabled = valueSelected === 'oneway'
+        return_date.disabled = flight_type.value === 'oneway'
             && search_type.value === 'fixed';
         trip_length_from.disabled = search_type.value === 'fixed';
         trip_length_to.disabled = search_type.value === 'fixed';

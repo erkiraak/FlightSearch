@@ -15,4 +15,3 @@ def listofnames(qs):
             string += f"{airport.iata_code}, "
 
     return string[:-2]
-
