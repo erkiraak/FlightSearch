@@ -3,7 +3,8 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.views.generic import CreateView
 
-from .forms import UpdateUserForm, UpdateProfileForm, ProfileDeleteForm
+from .forms import UpdateUserForm, UpdateProfileForm, ProfileDeleteForm, \
+    ProfilePageForm
 from .models import Profile
 
 
@@ -53,8 +54,9 @@ def delete_profile(request):
 
 class CreateProfilePageView(CreateView):
     model = Profile
+    form_class = ProfilePageForm
     template_name = "create_user_profile.html"
-    fields = '__all__'
+    #fields = '__all__'
     success_url = '/'
 
     def form_valid(self, form):

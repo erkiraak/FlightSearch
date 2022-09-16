@@ -34,3 +34,12 @@ class ProfileDeleteForm(forms.ModelForm):
     class Meta:
         model = Profile
         fields = []
+
+
+class ProfilePageForm(forms.ModelForm):
+    class Meta:
+        model = Profile
+        fields = ('avatar', 'bio')
+        widgets = {
+            'bio': forms.Textarea(attrs={'class': 'form-control'})
+        }
