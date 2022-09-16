@@ -108,18 +108,32 @@ a {
     flex: 1;
 }
 
-/* # TODO check cloud */
+.btn {
+    font-size: 1.5rem;
+    padding: 0.1rem 0.15rem;
+}
 
-/*body {*/
-/*    background: rgb(215, 215, 232);*/
-/*    background: linear-gradient(90deg, rgba(215, 215, 232, 1) 1%, rgba(6, 172, 245, 1) 32%, rgba(0, 212, 255, 1) 100%);*/
-/*    color: #333;*/
-/*    font: 100% Arial, Sans Serif;*/
-/*    height: 100vh;*/
-/*    margin: 0;*/
-/*    padding: 0;*/
-/*    overflow-x: hidden;*/
-/*}*/
+.btn-sm {
+    font-size: 0.75rem;
+    padding: 0.05rem 0.05rem;
+}
+.btn-smm {
+    font-size: 1.0rem;
+    padding: 0.05rem 0.25rem;
+}
+
+
+.user-profile-body user-profile {
+    max-width: 600px;
+}
+
+.cover {
+    max-width: 800px;
+}
+#navBarContainer {
+    max-width: 800px;
+}
+
 
 
 /* KEYFRAMES */

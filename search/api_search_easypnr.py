@@ -1,7 +1,6 @@
 import environ
 import requests
 
-from django.http import HttpResponse
 from .models import Airport
 
 
@@ -34,6 +33,6 @@ def get_airport_data_from_easypnr_api():
             except Exception as ex:
                 errors += f"{ex}\n"
 
-        return HttpResponse(f"Airport data added. \nErrors: \n{errors} ")
+        print(f"Airport data added. \nErrors: \n{errors} ")
 
-    return HttpResponse('Airport data already exists')
+    print('Airport data already exists')

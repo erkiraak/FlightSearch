@@ -146,8 +146,15 @@ STATIC_URL = 'static/'
 STATICFILES_DIRS = (
     os.path.join(BASE_DIR, "static/"),
 )
+
 MEDIA_URL = '//'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'profile_images')
+
+# Static files (CSS, JavaScript, Images)
+
+# MEDIA_ROOT = os.path.join(BASE_DIR, 'media').replace('\\', '/')
+# MEDIA_URL = '/media/'
+
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field
@@ -210,7 +217,8 @@ CRONJOBS = [
     (
         '0 3 * * *',
         'search.cron.cron_job_delete_search_objects_without_user',
-        '>> /home/erki/Documents/IT/PycharmProjects/FlightSearch/cron_job.log 2>&1'
+        '>> /home/erki/Documents/IT/PycharmProjects/'
+        'FlightSearch/cron_job.log 2>&1'
     ),
 
 ]

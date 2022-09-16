@@ -3,7 +3,7 @@ from datetime import datetime, timedelta
 from django.contrib.auth.models import User
 from django.db import models
 
-from constants import CABINS, CURRENCIES, STOPOVERS, FLIGHT_TYPE, SEARCH_TYPE
+from constants import CABINS, CURRENCIES, FLIGHT_TYPE, SEARCH_TYPE
 
 
 class Airport(models.Model):
@@ -15,22 +15,27 @@ class Airport(models.Model):
     def __str__(self):
         return f'{self.city}({self.iata_code})'
 
-# TODO add airline API call
+
 class Airline(models.Model):
+    iata_code = models.CharField(max_length=2)
     name = models.CharField(max_length=50, null=True, blank=True)
-    code = models.CharField(max_length=2)
-    logo = models.ImageField(upload_to='airline_logos', blank=True)
+    logo = models.ImageField(upload_to='./media/airline_logos', blank=True)
 
     @classmethod
     def add_airline_by_code(cls, code):
-        airline = cls(code=code)
-        airline.save()
-        return airline
+        a = cls(
+            iata_code=code,
+            name=code,
+            logo=f"https://daisycon.io/images/airline/"
+                 f"?width=350&height=100&color=ffffff&iata={code}"
+        )
+        a.save()
+        return a
 
     @classmethod
-    def get_airline(cls, code):
+    def get_or_create_airline(cls, code):
         try:
-            airline = cls.objects.get(code=code)
+            airline = cls.objects.get(iata_code=code)
         except models.ObjectDoesNotExist:
             airline = cls.add_airline_by_code(code)
 
@@ -38,7 +43,7 @@ class Airline(models.Model):
 
 
 class Flight(models.Model):
-    search = models.ForeignKey('Search', on_delete=models.CASCADE)
+    result = models.ForeignKey('Result', on_delete=models.CASCADE)
     airline = models.ForeignKey(Airline, on_delete=models.SET_NULL, null=True)
     flight_no = models.CharField(max_length=10)
     fly_from = models.ForeignKey(
@@ -51,16 +56,48 @@ class Flight(models.Model):
         on_delete=models.CASCADE,
         related_name='flight_fly_to'
     )
-    local_arrival = models.DateTimeField()
-    local_departure = models.DateTimeField()
+    departure_date = models.DateField(null=True, blank=True)
+    departure_time = models.TimeField(null=True, blank=True)
+    departure_arrival_time = models.TimeField(null=True, blank=True)
     fare_category = models.CharField(max_length=1)
-    segment_no = models.IntegerField()
-    return_flight = models.BooleanField()
 
-    # TODO implement flight creation
     @classmethod
-    def create_flight_object_from_kiwi_response(cls, api_response):
-        pass
+    def create_flight_object_from_kiwi_response(cls, api_response, result_id):
+        """
+        Creates Flight objects from JSON containing an individual flight
+        from KIWI API flight search results
+        :param result_id: PK of used Result object
+        :param api_response: JSON containing flight data
+        :return: Result object
+        """
+        flight = cls(
+            result=Result.objects.get(id=result_id),
+            airline=Airline.get_or_create_airline(
+                code=api_response.get('airline')
+            ),
+            flight_no=api_response.get('flight_no'),
+            fly_from=Airport.objects.get(
+                iata_code=api_response.get('flyFrom')
+            ),
+            fly_to=Airport.objects.get(
+                iata_code=api_response.get('flyTo')
+            ),
+            fare_category=api_response.get('fare_category'),
+            departure_date=datetime.strptime(
+                api_response.get('local_departure'),
+                '%Y-%m-%dT%H:%M:%S.%fZ'
+            ).date(),
+            departure_time=datetime.strptime(
+                api_response.get('local_departure'),
+                '%Y-%m-%dT%H:%M:%S.%fZ'
+            ).time(),
+            departure_arrival_time=datetime.strptime(
+                api_response.get('local_arrival'),
+                '%Y-%m-%dT%H:%M:%S.%fZ'
+            ).time(),
+        )
+        flight.save()
+        return flight
 
 
 class Search(models.Model):
@@ -93,8 +130,14 @@ class Search(models.Model):
         blank=True,
         null=True
     )
-    departure_date = models.DateField()
-    return_date = models.DateField(blank=True, null=True)
+    departure_date = models.DateField(
+        default=datetime.now().date() + timedelta(14)
+    )
+    return_date = models.DateField(
+        default=datetime.now().date() + timedelta(21),
+        blank=True,
+        null=True
+    )
     flexible = models.BooleanField(
         default=False,
         null=True,
@@ -127,7 +170,6 @@ class Search(models.Model):
         blank=True,
         null=True,
         default=None,
-        choices=STOPOVERS
     )
     limit = models.IntegerField(default=10)
     locale = models.CharField(max_length=5, default='en')
@@ -152,9 +194,10 @@ class Search(models.Model):
         for key in pk:
             try:
                 Search.objects.get(pk=key['pk']).delete()
-            except models.ProtectedError as e:
-                print(e)
+            except models.ProtectedError:
+                pass
 
+    # TODO optional add error handling
     @classmethod
     def create_search_object_from_request(cls, cleaned_data, user):
         """
@@ -195,11 +238,11 @@ class Search(models.Model):
 
 class Result(models.Model):
     search = models.ForeignKey(Search, on_delete=models.CASCADE)
-    airlines = models.ManyToManyField(Airline)
     fly_from = models.ForeignKey(
         Airport,
         related_name='result_fly_from',
         on_delete=models.CASCADE
+
     )
     fly_to = models.ForeignKey(
         Airport,
@@ -207,28 +250,44 @@ class Result(models.Model):
         on_delete=models.CASCADE
     )
     departure_duration = models.DurationField()
-    return_duration = models.DurationField()
+    return_duration = models.DurationField(null=True, blank=True)
     departure_date = models.DateField()
-    return_date = models.DateField()
     departure_time = models.TimeField()
     departure_arrival_time = models.TimeField()
-    return_time = models.TimeField()
-    return_arrival_time = models.TimeField()
+    return_date = models.DateField(null=True, blank=True)
+    return_time = models.TimeField(null=True, blank=True)
+    return_arrival_time = models.TimeField(null=True, blank=True)
     connecting_airport_departure = models.ManyToManyField(
         Airport,
         related_name='connecting_airport_departure'
     )
     connecting_airport_return = models.ManyToManyField(
         Airport,
-        related_name='connecting_airport_return'
+        related_name='connecting_airport_return',
     )
     has_airport_change = models.BooleanField()
     number_of_stops_departure = models.IntegerField()
-    number_of_stops_return = models.IntegerField()
+    number_of_stops_return = models.IntegerField(null=True, blank=True)
     price = models.IntegerField()
-    flights = models.ManyToManyField(Flight)
+    departure_flights = models.ManyToManyField(
+        Flight,
+        related_name='departure_flights'
+    )
+    departure_airlines = models.ManyToManyField(
+        Airline,
+        related_name='departure_airlines'
+    )
+    return_flights = models.ManyToManyField(
+        Flight,
+        related_name='return_flights',
+    )
+    return_airlines = models.ManyToManyField(
+        Airline,
+        related_name='return_airlines'
+    )
     booking_token = models.CharField(max_length=1000)
 
+    # TODO optional add error handling
     @classmethod
     def create_result_object_from_kiwi_response(cls, api_response, search_id):
         """
@@ -239,62 +298,81 @@ class Result(models.Model):
         :return: Result object
         """
         result = cls(
-            search=Search.objects.filter(id=search_id).first(),
-            fly_from=Airport.objects.filter(
-                iata_code=api_response['flyFrom']
-            ).first(),
-            fly_to=Airport.objects.filter(
-                iata_code=api_response['flyTo']
-            ).first(),
-            departure_duration=timedelta(
-                seconds=api_response['duration']['departure']
+            search=Search.objects.get(id=search_id),
+            fly_from=Airport.objects.get(
+                iata_code=api_response.get('flyFrom')
             ),
-            return_duration=timedelta(
-                seconds=api_response['duration']['return']
+            fly_to=Airport.objects.get(
+                iata_code=api_response.get('flyTo')
+            ),
+            departure_duration=timedelta(
+                seconds=api_response.get('duration').get('departure')
             ),
             departure_date=datetime.strptime(
-                api_response['local_departure'],
+                api_response.get('local_departure'),
                 '%Y-%m-%dT%H:%M:%S.%fZ'
             ).date(),
-            return_date=datetime.strptime(
-                api_response['route'][-1]['local_departure'],
-                '%Y-%m-%dT%H:%M:%S.%fZ'
-            ).date(),
-            # TODO get actual date for first return flight
             departure_time=datetime.strptime(
-                api_response['local_departure'],
+                api_response.get('local_departure'),
                 '%Y-%m-%dT%H:%M:%S.%fZ'
             ).time(),
             departure_arrival_time=datetime.strptime(
-                api_response['local_arrival'],
+                api_response.get('local_arrival'),
                 '%Y-%m-%dT%H:%M:%S.%fZ'
             ).time(),
-            return_time=datetime.strptime(
-                api_response['route'][-1]['local_departure'],
-                '%Y-%m-%dT%H:%M:%S.%fZ'
-            ).time(),
-            # TODO get actual date for first return flight
-            return_arrival_time=datetime.strptime(
-                api_response['route'][-1]['local_arrival'],
-                '%Y-%m-%dT%H:%M:%S.%fZ'
-            ).time(),
-            has_airport_change=api_response['has_airport_change'],
+            has_airport_change=api_response.get('has_airport_change'),
             number_of_stops_departure=sum(
-                1 for flight in api_response['route'] if
+                1 for flight in api_response.get('route') if
                 flight['return'] == 0
             ) - 1,
-            number_of_stops_return=sum(
-                1 for flight in api_response['route'] if
-                flight['return'] == 1
-            ) - 1,
-            price=api_response['price'],
-            booking_token=api_response['booking_token'],
+            price=api_response.get('price'),
+            booking_token=api_response.get('booking_token'),
         )
 
-        # for flight in api_response['data']['route']:
-        #     result.flights.set(Flight.)
-        #
-        # for airline in api_response['airlines']:
-        #     result.airlines.set(Airline.get_airline(airline))
+        if api_response.get('duration').get('return') != 0:
+            result.return_duration = timedelta(
+                seconds=api_response.get('duration').get('return')
+            )
+            result.return_date = datetime.strptime(
+                cls.get_first_return_flight(api_response.get('route')),
+                '%Y-%m-%dT%H:%M:%S.%fZ'
+            ).date()
+            result.return_time = datetime.strptime(
+                cls.get_first_return_flight(api_response.get('route')),
+                '%Y-%m-%dT%H:%M:%S.%fZ'
+            ).time()
+            result.return_arrival_time = datetime.strptime(
+                api_response.get('route')[-1].get('local_arrival'),
+                '%Y-%m-%dT%H:%M:%S.%fZ'
+            ).time()
+            result.number_of_stops_return = sum(
+                1 for flight in api_response['route'] if
+                flight['return'] == 1
+            ) - 1
         result.save()
+
+        for flight in api_response.get('route'):
+            flight_object = Flight.create_flight_object_from_kiwi_response(
+                api_response=flight,
+                result_id=result.id
+            )
+            if flight.get('return') == 0:
+                result.departure_flights.add(flight_object)
+                result.departure_airlines.add(flight_object.airline)
+                if flight_object.fly_to not in [result.fly_to, result.fly_from]:
+                    result.connecting_airport_departure.add(
+                        flight_object.fly_to
+                    )
+            else:
+                result.return_flights.add(flight_object)
+                result.return_airlines.add(flight_object.airline)
+                if flight_object.fly_to not in [result.fly_to, result.fly_from]:
+                    result.connecting_airport_return.add(flight_object.fly_to)
+
         return result
+
+    @staticmethod
+    def get_first_return_flight(route):
+        for flight in route:
+            if flight.get('return') == 1:
+                return flight.get('local_departure')
