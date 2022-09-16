@@ -1,0 +1,114 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+
+<form class="form-wrapper">
+        {{error}}
+
+    <h5 class="card-title">Your search history:
+    </h5>
+
+    <div class="container-sm">
+            <div class="card my-2 mx-0 px-0 card-header">
+
+                <div class="row m-0 p-0 align-items-center">
+                    <div class="col">
+                        <strong>Origin</strong>
+                    </div>
+                    <div class="col">
+                        <strong>Destination</strong>
+                    </div>
+                    <div class="col">
+                        <strong>Departure date</strong>
+                    </div>
+                    <div class="col">
+                        <strong>Return date</strong>
+                    </div>
+                </div>
+            </div>
+
+            {% for s in searches %}
+            <div class="card my-2">
+                <div class="row mx-0 align-items-center">
+                    <div class="col px-1">
+                        {{ s.fly_from }}
+                    </div>
+                    <div class="col px-1">
+                        {{ s.fly_to }}
+                    </div>
+                    <div class="col px-1">
+                        {{ s.departure_date }}
+                    </div>
+
+                    <div class="col px-1 my-2">
+                        {% if s.return_date %}
+                        {{ s.return_date }}
+                        {% else %}
+                        ---
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+
+            <button
+                    type="button"
+                    class="btn btn-danger w-100"
+                    data-bs-toggle="modal"
+                    data-bs-target="#delete-all-modal"
+                    data-delete_url="{% url 'delete_all_search' %}"
+            >
+                Delete search history
+            </button>
+        </div>
+</form>
+
+
+
+<div class="modal fade" id="delete-all-modal">
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <h6 class="modal-title">Delete</h6>
+                <button type="button" class="btn-close"
+                        data-bs-dismiss="modal"></button>
+            </div>
+
+            <div class="modal-body justify-content-left">
+                <p>
+                    Are you sure you want to delete your search history?
+                </p>
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary btn-smm"
+                        data-bs-dismiss="modal">Cancel
+                </button>
+                <form action="" method="POST">
+                    {% csrf_token %}
+                    <button type="submit" value="DELETE" class="btn btn-danger btn-smm">Delete
+                    </button>
+                </form>
+
+            </div>
+
+        </div>
+    </div>
+</div>
+
+
+<script>
+    $('#delete-all-modal').on('show.bs.modal', function (event) {
+        let button = $(event.relatedTarget)
+        let url = button.data('delete_url')
+        let modal = $(this)
+
+        modal.find('.modal-footer form').attr('action', url)
+    })
+
+</script>
+
+{% endblock %}
+

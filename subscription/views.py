@@ -1,6 +1,6 @@
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.urls import reverse_lazy
-from django.views.generic import (ListView, CreateView, DetailView,
+from django.views.generic import (ListView, CreateView,
                                   UpdateView, DeleteView)
 from .models import Subscription
 from search.models import Search
@@ -8,27 +8,16 @@ from search.models import Search
 
 # TODO OPTIONAL change CreateSubscription type to avoid POST issues
 class CreateSubscription(LoginRequiredMixin, CreateView):
-    template_name = 'create_subscription.html'
     model = Subscription
     success_url = reverse_lazy('list_subscription')
     fields = ('price_to', 'curr', 'email')
     object = None
-    context_object_name = 'search'
-
-    def get_context_data(self, **kwargs):
-        context = super(CreateSubscription, self).get_context_data(**kwargs)
-        search = Search.objects.filter(id=self.kwargs['pk'])
-        context['search'] = search
-        return context
 
     def get_form(self, form_class=None):
         form = super(CreateSubscription, self).get_form(form_class)
         form.fields['price_to'].required = True
         form.fields['email'].required = True
         return form
-
-    def get_initial(self):
-        return {'email': self.request.user.email}
 
     def form_valid(self, form):
         self.object = form.save(commit=False)
