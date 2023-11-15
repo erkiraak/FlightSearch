@@ -58,7 +58,7 @@ If Gmail is used for sending emails, an app password must be created
 
 ### Executing program
 
-1. Launch Django server ```pip install -r requirements.txt```
+1. Launch Django server ```python3 manage.py runserver```
 2. Navigate to `http://127.0.0.1:8000` or `http://localhost:8000`
 
 
