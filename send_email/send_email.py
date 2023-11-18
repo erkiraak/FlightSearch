@@ -22,3 +22,4 @@ def send_email(subscription, result):
     with smtplib.SMTP_SSL("smtp.gmail.com", 465) as smtp:
         smtp.login(email_address, email_password)
         smtp.send_message(msg)
+

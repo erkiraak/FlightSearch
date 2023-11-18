@@ -167,7 +167,7 @@ AUTHENTICATION_BACKENDS = [
     'allauth.account.auth_backends.AuthenticationBackend'
 ]
 
-SITE_ID = 5
+SITE_ID = 7
 LOGIN_REDIRECT_URL = '/'
 
 # Additional configuration settings

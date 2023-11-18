@@ -25,10 +25,11 @@
                 <div class="col-md-10 my-1">
                     <div class="h-100 card p-0 m-0">
 
-                        <div class="row align-items-center mb-1">
+                        <div class="row align-items-center my-auto py-1">
                             <div class="col-2">
                                 {% for airline in i.departure_airlines.all %}
-                                <img src="{{ airline.logo }}"
+                                <img class="mb-1"
+                                     src="{{ airline.logo }}"
                                      alt="logo"
                                      height="20"
                                      width="70">
@@ -195,11 +196,11 @@
                 <div class="my-1 col ">
                     <div class="h-100 card">
                         <div class="card-body py-0 my-0">
-                            <div class="row mt-2 mb-0">
-                                <h4 class="card-title">{{i.price}}</h4>
-                            </div>
-                            <div class="row mt-0 mb-2">
-                                <h6 class="card-title">{{search.curr}}</h6>
+                            <div class="row h-100">
+                                <div class="align-self-center my-2">
+                                    <h4 >{{i.price}}</h4>
+                                    <h6 class="my-0">{{search.curr}}</h6>
+                                </div>
                             </div>
                         </div>
                     </div>

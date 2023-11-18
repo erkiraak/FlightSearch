@@ -1,6 +1,6 @@
 import datetime
 
-from search.api_search_kiwi import search_from_kiwi_api
+from search.api_search_flights import search_from_kiwi_api
 from search.models import Result
 from .send_email import send_email
 from subscription.models import Subscription

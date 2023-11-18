@@ -23,14 +23,14 @@ class Airline(models.Model):
 
     @classmethod
     def add_airline_by_code(cls, code):
-        a = cls(
+        airline = cls(
             iata_code=code,
             name=code,
-            logo=f"https://daisycon.io/images/airline/"
-                 f"?width=350&height=100&color=ffffff&iata={code}"
+            logo=f"https://daisycon.io/images/airline/?width=350&height=100&color=ffffff&iata={code}"
         )
-        a.save()
-        return a
+        airline.save()
+        return airline
+
     # TODO OPTIONAL implement airline search api
     @classmethod
     def get_or_create_airline(cls, code):
@@ -46,16 +46,8 @@ class Flight(models.Model):
     result = models.ForeignKey('Result', on_delete=models.CASCADE)
     airline = models.ForeignKey(Airline, on_delete=models.SET_NULL, null=True)
     flight_no = models.CharField(max_length=10)
-    fly_from = models.ForeignKey(
-        Airport,
-        on_delete=models.CASCADE,
-        related_name='flight_fly_from',
-    )
-    fly_to = models.ForeignKey(
-        Airport,
-        on_delete=models.CASCADE,
-        related_name='flight_fly_to'
-    )
+    fly_from = models.ForeignKey(Airport, on_delete=models.CASCADE, related_name='flight_fly_from')
+    fly_to = models.ForeignKey(Airport, on_delete=models.CASCADE, related_name='flight_fly_to')
     departure_date = models.DateField(null=True, blank=True)
     departure_time = models.TimeField(null=True, blank=True)
     departure_arrival_time = models.TimeField(null=True, blank=True)
@@ -72,105 +64,41 @@ class Flight(models.Model):
         """
         flight = cls(
             result=Result.objects.get(id=result_id),
-            airline=Airline.get_or_create_airline(
-                code=api_response.get('airline')
-            ),
+            airline=Airline.get_or_create_airline(code=api_response.get('airline')),
             flight_no=api_response.get('flight_no'),
-            fly_from=Airport.objects.get(
-                iata_code=api_response.get('flyFrom')
-            ),
-            fly_to=Airport.objects.get(
-                iata_code=api_response.get('flyTo')
-            ),
+            fly_from=Airport.objects.get(iata_code=api_response.get('flyFrom')),
+            fly_to=Airport.objects.get(iata_code=api_response.get('flyTo')),
             fare_category=api_response.get('fare_category'),
-            departure_date=datetime.strptime(
-                api_response.get('local_departure'),
-                '%Y-%m-%dT%H:%M:%S.%fZ'
-            ).date(),
-            departure_time=datetime.strptime(
-                api_response.get('local_departure'),
-                '%Y-%m-%dT%H:%M:%S.%fZ'
-            ).time(),
-            departure_arrival_time=datetime.strptime(
-                api_response.get('local_arrival'),
-                '%Y-%m-%dT%H:%M:%S.%fZ'
-            ).time(),
+            departure_date=datetime.strptime(api_response.get('local_departure'), '%Y-%m-%dT%H:%M:%S.%fZ').date(),
+            departure_time=datetime.strptime(api_response.get('local_departure'), '%Y-%m-%dT%H:%M:%S.%fZ').time(),
+            departure_arrival_time=datetime.strptime(api_response.get('local_arrival'), '%Y-%m-%dT%H:%M:%S.%fZ').time(),
         )
         flight.save()
         return flight
 
+
 # TODO OPTIONAL save cheapest result price
 class Search(models.Model):
-    user = models.ForeignKey(
-        User,
-        on_delete=models.CASCADE,
-        blank=True, null=True
-    )
-    search_type = models.CharField(
-        max_length=10,
-        default='strict',
-        choices=SEARCH_TYPE
-    )
-    flight_type = models.CharField(
-        max_length=10,
-        default='round',
-        choices=FLIGHT_TYPE
-    )
-    fly_from = models.ForeignKey(
-        Airport,
-        on_delete=models.CASCADE,
-        related_name='search_fly_from',
-        blank=True,
-        null=True
-    )
-    fly_to = models.ForeignKey(
-        Airport,
-        on_delete=models.CASCADE,
-        related_name='search_fly_to',
-        blank=True,
-        null=True
-    )
-    departure_date = models.DateField(
-        default=datetime.now().date() + timedelta(14)
-    )
-    return_date = models.DateField(
-        default=datetime.now().date() + timedelta(21),
-        blank=True,
-        null=True
-    )
-    flexible = models.BooleanField(
-        default=False,
-        null=True,
-        blank=True
-    )
-    nights_in_dst_from = models.PositiveIntegerField(
-        default=7,
-        null=True,
-        blank=True)
-    nights_in_dst_to = models.PositiveIntegerField(
-        default=14,
-        null=True,
-        blank=True)
-    max_fly_duration = models.PositiveIntegerField(
-        blank=True,
-        null=True,
-        default=None
-    )
+    user = models.ForeignKey(User, on_delete=models.CASCADE, blank=True, null=True)
+    search_type = models.CharField(max_length=10, default='strict', choices=SEARCH_TYPE)
+    flight_type = models.CharField(max_length=10, default='round', choices=FLIGHT_TYPE)
+    fly_from = models.ForeignKey(Airport, on_delete=models.CASCADE, related_name='search_fly_from', blank=True,
+                                 null=True)
+    fly_to = models.ForeignKey(Airport, on_delete=models.CASCADE, related_name='search_fly_to', blank=True, null=True)
+    departure_date = models.DateField(default=datetime.now().date() + timedelta(14))
+    return_date = models.DateField(default=datetime.now().date() + timedelta(21), blank=True, null=True)
+    flexible = models.BooleanField(default=False, null=True, blank=True)
+    nights_in_dst_from = models.PositiveIntegerField(default=7, null=True, blank=True)
+    nights_in_dst_to = models.PositiveIntegerField(default=14, null=True, blank=True)
+    max_fly_duration = models.PositiveIntegerField(blank=True, null=True, default=None)
     adults = models.PositiveIntegerField(blank=True, default=1)
     children = models.PositiveIntegerField(blank=True, default=0)
     infants = models.PositiveIntegerField(blank=True, default=0)
-    selected_cabins = models.CharField(
-        max_length=1,
-        choices=CABINS,
-        default='M')
+    selected_cabins = models.CharField(max_length=1, choices=CABINS, default='M')
     curr = models.CharField(max_length=3, choices=CURRENCIES, default='EUR')
     price_from = models.IntegerField(blank=True, null=True)
     price_to = models.IntegerField(blank=True, null=True)
-    max_stopovers = models.IntegerField(
-        blank=True,
-        null=True,
-        default=None,
-    )
+    max_stopovers = models.IntegerField(blank=True, null=True, default=None)
     limit = models.IntegerField(default=5)
     locale = models.CharField(max_length=5, default='en')
 
@@ -188,9 +116,7 @@ class Search(models.Model):
 
     @staticmethod
     def delete_search(user, nr_remaining):
-        pk = Search.objects.filter(user=user
-                                   ).order_by('-id'
-                                              ).values('pk')[nr_remaining:]
+        pk = Search.objects.filter(user=user).order_by('-id').values('pk')[nr_remaining:]
 
         for key in pk:
             try:
@@ -239,17 +165,8 @@ class Search(models.Model):
 
 class Result(models.Model):
     search = models.ForeignKey(Search, on_delete=models.CASCADE)
-    fly_from = models.ForeignKey(
-        Airport,
-        related_name='result_fly_from',
-        on_delete=models.CASCADE
-
-    )
-    fly_to = models.ForeignKey(
-        Airport,
-        related_name='result_fly_to',
-        on_delete=models.CASCADE
-    )
+    fly_from = models.ForeignKey(Airport, related_name='result_fly_from', on_delete=models.CASCADE)
+    fly_to = models.ForeignKey(Airport, related_name='result_fly_to', on_delete=models.CASCADE)
     departure_duration = models.DurationField()
     return_duration = models.DurationField(null=True, blank=True)
     departure_date = models.DateField()
@@ -258,34 +175,16 @@ class Result(models.Model):
     return_date = models.DateField(null=True, blank=True)
     return_time = models.TimeField(null=True, blank=True)
     return_arrival_time = models.TimeField(null=True, blank=True)
-    connecting_airport_departure = models.ManyToManyField(
-        Airport,
-        related_name='connecting_airport_departure'
-    )
-    connecting_airport_return = models.ManyToManyField(
-        Airport,
-        related_name='connecting_airport_return',
-    )
+    connecting_airport_departure = models.ManyToManyField(Airport, related_name='connecting_airport_departure')
+    connecting_airport_return = models.ManyToManyField(Airport, related_name='connecting_airport_return')
     has_airport_change = models.BooleanField()
     number_of_stops_departure = models.IntegerField()
     number_of_stops_return = models.IntegerField(null=True, blank=True)
     price = models.IntegerField()
-    departure_flights = models.ManyToManyField(
-        Flight,
-        related_name='departure_flights'
-    )
-    departure_airlines = models.ManyToManyField(
-        Airline,
-        related_name='departure_airlines'
-    )
-    return_flights = models.ManyToManyField(
-        Flight,
-        related_name='return_flights',
-    )
-    return_airlines = models.ManyToManyField(
-        Airline,
-        related_name='return_airlines'
-    )
+    departure_flights = models.ManyToManyField(Flight,related_name='departure_flights')
+    departure_airlines = models.ManyToManyField(Airline,related_name='departure_airlines')
+    return_flights = models.ManyToManyField(Flight,related_name='return_flights')
+    return_airlines = models.ManyToManyField(Airline, related_name='return_airlines')
     booking_token = models.CharField(max_length=1000)
 
     # TODO optional add error handling

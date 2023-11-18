@@ -2,8 +2,9 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.urls import reverse_lazy
 from django.views.generic import (ListView, CreateView,
                                   UpdateView, DeleteView)
-from .models import Subscription
+
 from search.models import Search
+from .models import Subscription
 
 
 # TODO OPTIONAL change CreateSubscription type to avoid POST issues
@@ -72,3 +73,4 @@ class DeleteAllSubscription(LoginRequiredMixin, DeleteView):
 
     def get_object(self, queryset=None):
         return self.get_queryset()
+

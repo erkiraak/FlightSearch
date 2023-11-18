@@ -2,12 +2,10 @@
 {% block content %}
 {% load static %}
 
-    <link rel="stylesheet" href="../../static/search.css">
-
 
 <!-- # TODO OPTIONAL add option to search between dates one way-->
 
-<form class="form-wrapper" action="/" enctype="multipart/form-data"
+<form id="search" class="form-wrapper" action="/" enctype="multipart/form-data"
       method="post">
     {% csrf_token %}
     {{error}}
@@ -24,8 +22,8 @@
 
                     <!--        ORIGIN            -->
                     <div class="col-sm fieldWrapper mb-2">
-                        <label class="form-label">
-                            {{ form.fly_from.label }}
+                        <label class="form-label font-weight-bold">
+                            {{ form.fly_from.label }}*
                         </label>
                         <div class="input-group">
                                 <span class="input-group-text"
@@ -41,7 +39,7 @@
                     <!--        DESTINATION            -->
                     <div class="col-sm fieldWrapper mb-2">
                         <label class="form-label">
-                            {{ form.fly_to.label }}
+                            {{ form.fly_to.label }}"
                         </label>
                         <div class="input-group">
                                 <span class="input-group-text"
@@ -227,6 +225,8 @@
 
         </div>
         <div class="card">
+
+            <!--        FILTERS            -->
             <div class="card-body">
                 <h5 class="card-title">Filters</h5>
                 <div class="row">
@@ -379,6 +379,7 @@
     });
 
 </script>
+
 
 <script>
     window.onload = function () {

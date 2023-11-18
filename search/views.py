@@ -6,7 +6,7 @@ from django.shortcuts import render
 from django.urls import reverse_lazy
 from django.views.generic import ListView, DeleteView
 
-from .api_search_kiwi import search_from_kiwi_api
+from .api_search_flights import search_from_kiwi_api
 from .forms import SearchForm
 from .models import Search, Result, Airport
 

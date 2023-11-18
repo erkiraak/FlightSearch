@@ -22,7 +22,7 @@ def main():
 if __name__ == '__main__':
     main()
 
-    from search.api_search_easypnr import get_airport_data_from_easypnr_api
+    from search.api_search_airports import get_airport_data_from_easypnr_api
     from search.api_search_airlines import get_airline_data_from_rapidapi
     get_airport_data_from_easypnr_api()
     get_airline_data_from_rapidapi()
